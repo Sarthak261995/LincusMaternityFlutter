@@ -6,9 +6,9 @@ class PreferencesService  {
   static final String _favouritesKey = 'favourites';
 
    SharedPreferences _sharedPreferences;
-  PreferencesService(SharedPreferences this._sharedPreferences);
+  PreferencesService(this._sharedPreferences);
 
-  Future<void> Initialise() async{
+  Future<void> initialise() async{
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
@@ -25,14 +25,14 @@ class PreferencesService  {
     _sharedPreferences.setStringList(_favouritesKey, favourites);
   }
 
-  Future<void> _saveToPreferences(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
+  Future<void> saveToPreferences(String key, String value) async {
+    //final prefs = await SharedPreferences.getInstance();
+    _sharedPreferences.setString(key, value);
   }
 
-  Future<String> _getStringFromPreferences(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return Future<String>.value(prefs.getString(key) ?? '');
+  Future<String> getStringFromPreferences(String key) async {
+    //final prefs = await SharedPreferences.getInstance();
+    return Future<String>.value(_sharedPreferences.getString(key) ?? '');
   }
 
 }

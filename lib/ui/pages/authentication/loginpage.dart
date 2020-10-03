@@ -3,7 +3,9 @@ import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
 
-class LoginPage extends StatefulWidget {
+import '../base_page.dart';
+
+class LoginPage extends BasePage {
 
   final String title;
   LoginPage({String this.title});
@@ -12,8 +14,15 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends BasePageState<LoginPage> {
   LoginStore model = AppLocator.login_store;
+
+  @override
+  void initState() {
+    super.initState();
+    //widget.store.loadInitialStories();
+  }
+
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
@@ -39,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
       );
     }
+    super.currentContext = context;
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
