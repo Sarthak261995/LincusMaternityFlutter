@@ -6,9 +6,7 @@ class PreferencesService  {
   static final String _favouritesKey = 'favourites';
 
    SharedPreferences _sharedPreferences;
-  PreferencesService(){
-
-  }
+  PreferencesService(SharedPreferences this._sharedPreferences);
 
   Future<void> Initialise() async{
     _sharedPreferences = await SharedPreferences.getInstance();
