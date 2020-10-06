@@ -14,6 +14,11 @@ abstract class LoginStoreBase with Store {
   @observable
   String password;
 
+  String errorText = "";
+
+  @observable
+  bool showError;
+
   /// when the store is created, we read in the current settings immediately to avoid the scenario where
   /// the values displayed will change upon switching to the settings tab
   LoginStoreBase({this.preferencesService,this.apiService}) {
@@ -21,7 +26,15 @@ abstract class LoginStoreBase with Store {
 
   @action
   Future<void> try_login() async{
-    var loginResponse = await apiService.get_access_token(username: username,password: password);
+    try
+    {
+      var loginResponse = await apiService.getAccessToken(username: username,password: password);
+    }
+    catch(e)
+    {
+      errorText = e.toString();
+      showError = true;
+    }
   }
 
   @action
@@ -30,4 +43,10 @@ abstract class LoginStoreBase with Store {
     password = "";
   }
 
+  @action
+  void resetShowError()
+  {
+    showError = null;
+    errorText = "";
+  }
 }

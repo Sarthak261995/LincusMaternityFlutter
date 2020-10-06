@@ -39,6 +39,21 @@ mixin _$LoginStore on LoginStoreBase, Store {
     });
   }
 
+  final _$showErrorAtom = Atom(name: 'LoginStoreBase.showError');
+
+  @override
+  bool get showError {
+    _$showErrorAtom.reportRead();
+    return super.showError;
+  }
+
+  @override
+  set showError(bool value) {
+    _$showErrorAtom.reportWrite(value, super.showError, () {
+      super.showError = value;
+    });
+  }
+
   final _$try_loginAsyncAction = AsyncAction('LoginStoreBase.try_login');
 
   @override
@@ -61,10 +76,22 @@ mixin _$LoginStore on LoginStoreBase, Store {
   }
 
   @override
+  void resetShowError() {
+    final _$actionInfo = _$LoginStoreBaseActionController.startAction(
+        name: 'LoginStoreBase.resetShowError');
+    try {
+      return super.resetShowError();
+    } finally {
+      _$LoginStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 username: ${username},
-password: ${password}
+password: ${password},
+showError: ${showError}
     ''';
   }
 }
