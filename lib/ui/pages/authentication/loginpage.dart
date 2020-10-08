@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
@@ -84,55 +85,185 @@ class _LoginPageState extends BasePageState<LoginPage> {
       },
     );
   }
-
-  /*showSnackBar(String text)
-  {
-    final snackBar = SnackBar(
-      content: Text(text,style: Theme.of(context).textTheme.bodyText1),
-      duration: Duration(seconds: 2),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    final logo = Padding(
-      padding: EdgeInsets.all(40.0),
-      child: SvgPicture.asset(
-          'assets/images/avocado.svg',height: 30,width: 30,
-      ) ,
-    );
-    var welcomeText = 'Hello';
-    final welcome = GestureDetector( onTap: (){ model.errorText = "test exception"; model.showError = true;}, child:Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        welcomeText,
-      ))
-    );
-    var body;
-    if (1==2) {
-      body = Column(
-        children: [logo, welcome],
-        mainAxisAlignment: MainAxisAlignment.center,
-      );
-    } else {
-      body = Column(
-        children: [logo, welcome],
-        mainAxisAlignment: MainAxisAlignment.center,
-      );
-    }
     super.currentContext = context;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(28.0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.grey, Theme.of(context).primaryColor]),
+      body:  GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.white ,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: -13,
+              right: -13,
+              child: Image.asset('assets/images/image1.png',height: 80,width: MediaQuery.of(context).size.width * 0.4, fit: BoxFit.fill,),
+            ),
+            Positioned(
+              bottom: -10,
+              child: Image.asset('assets/images/footer.png',height: 150,width: MediaQuery.of(context).size.width, fit: BoxFit.fill,),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30,top: 60,right: 30),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center ,
+                    children: <Widget>[
+                      Image.asset('assets/images/image8.png', fit: BoxFit.contain, height: 60, width: 60 ),
+                      RichText(
+                          text:TextSpan(text: 'LincUs',style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                              children: <TextSpan>[
+                                TextSpan(text: '  Maternity', style: TextStyle(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.normal))
+                              ]
+                          )
+                      )
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.all(30.0),
+                    decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white,borderRadius: BorderRadius.circular(10.0),boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 6.0,
+                          spreadRadius: 5
+                      ),
+                    ]),
+                    child: Column(
+                      children: <Widget>[
+                        Observer(
+                            builder: (_) => TextField(
+                              style: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                              //onChanged: (value) => store.name = value,
+                              decoration: InputDecoration(
+                                  hintText: 'Email',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never  ,
+                                  hintStyle: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  labelStyle:TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  prefixStyle: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  errorText: '',
+                                  disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey.withOpacity(0.9))),
+                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey.withOpacity(0.9))),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  errorBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey)
+                                  )
+                              ),
+                            )
+                        ),
+                        SizedBox(height: 10.0),
+                        Observer(
+                            builder: (_) => TextField(
+                              style: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                              //onChanged: (value) => store.name = value,
+                              decoration: InputDecoration(
+                                  hintText: 'Password',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never  ,
+                                  hintStyle: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  labelStyle:TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  prefixStyle: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w600),
+                                  errorText: '',
+                                  disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey.withOpacity(0.9))),
+                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey.withOpacity(0.9))),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  errorBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey)
+                                  )
+                              ),
+                            )
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          height: 50.0,
+                          child: RaisedButton(
+                            elevation: 5,
+                            onPressed: () {},
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                            padding: EdgeInsets.all(0.0),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [Colors.lightGreen, Colors.green],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.0)
+                              ),
+                              child: Container(
+                                constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Login",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    height: 50.0,
+                    child: RaisedButton(
+                      onPressed: () {},
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                      padding: EdgeInsets.all(0.0),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [Colors.blue, Colors.pink],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(30.0)
+                        ),
+                        child: Container(
+                          constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Register",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
-        child: body,
       ),
+      )
     );
   }
 }
