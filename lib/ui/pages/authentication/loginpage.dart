@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
@@ -97,7 +98,9 @@ class _LoginPageState extends BasePageState<LoginPage> {
   Widget build(BuildContext context) {
     final logo = Padding(
       padding: EdgeInsets.all(40.0),
-      child: Image.asset('assets/actingweb-header-small.png'),
+      child: SvgPicture.asset(
+          'assets/images/avocado.svg',height: 30,width: 30,
+      ) ,
     );
     var welcomeText = 'Hello';
     final welcome = GestureDetector( onTap: (){ model.errorText = "test exception"; model.showError = true;}, child:Padding(
