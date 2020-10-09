@@ -471,18 +471,50 @@ final ThemeData appTheme = ThemeData(
     selectedColor: Color(0x3d000000),
     shape: StadiumBorder(
         side: BorderSide(
-          color: Color(0xff000000),
-          width: 0,
-          style: BorderStyle.none,
-        )),
+      color: Color(0xff000000),
+      width: 0,
+      style: BorderStyle.none,
+    )),
   ),
   dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Color(0xff000000),
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(0.0)),
-      )),
+    side: BorderSide(
+      color: Color(0xff000000),
+      width: 0,
+      style: BorderStyle.none,
+    ),
+    borderRadius: BorderRadius.all(Radius.circular(0.0)),
+  )),
 );
+
+double fontSizeExtraSmall = 9;
+double fontSizeSmall = 12;
+double fontSize13 = 13;
+double fontSizeMedium = 14;
+double fontSizeLarge = 16;
+double fontSize17 = 17;
+double fontSizeExtraLarge = 18;
+double fontSize22 = 22;
+double fontSize24 = 24;
+double fontSize28 = 28;
+double fontSizeHeading = 36;
+double fontSizeIcon = 54;
+double fontSize64 = 64;
+
+var defaultTextFieldUnderlineBorder = UnderlineInputBorder(
+    borderSide:
+    BorderSide(color: Colors.grey.withOpacity(0.9)));
+
+var defaultErrorTextFieldUnderlineBorder = UnderlineInputBorder(
+    borderSide:
+    BorderSide(color: Colors.red));
+
+var defaultErrorTextStyle = TextStyle(
+    fontSize: fontSizeLarge,
+    color: Colors.red,
+    fontWeight: FontWeight.normal);
+
+var defaultTextFieldTextStyle = TextStyle(
+    fontSize: fontSizeExtraLarge,
+    color: Colors.black,
+    fontWeight: FontWeight.w600);

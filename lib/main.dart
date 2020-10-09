@@ -9,7 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
     WidgetsFlutterBinding.ensureInitialized();
     var sharedPreferences = await SharedPreferences.getInstance();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // transparent status bar
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark// transparent status bar
     ));
     setupServiceLocator(sharedPreferences);
     runApp(App());
