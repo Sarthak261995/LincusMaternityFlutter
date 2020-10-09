@@ -79,7 +79,7 @@ mixin _$LoginStore on LoginStoreBase, Store {
   final _$try_loginAsyncAction = AsyncAction('LoginStoreBase.try_login');
 
   @override
-  Future<void> try_login() {
+  Future<bool> try_login() {
     return _$try_loginAsyncAction.run(() => super.try_login());
   }
 

@@ -20,13 +20,13 @@ class ApiService {
     if (username.isNotEmpty && password.isNotEmpty) {
       var request = new AccessTokenRequest(username: username,
           password: password,
-          grantType: GrantType.password.toString(),
+          grantType: AppConstants.grantTypePassword,
           clientId: AppConstants.client_id,
           clientSecret: AppConstants.client_secret);
       final api_response = await anonymousPost(url:AppUrls.get_access_token_url,postData: request.toJson());
         response = AccessToken.fromJson(api_response);
     }
-    return response;
+    return Future<AccessToken>.value(response);
   }
 
   _decodeResponse(Response response) =>
@@ -55,10 +55,11 @@ class ApiService {
 
   Future<dynamic> anonymousPost({String url,Map<String,dynamic> postData}) async {
     var responseJson;
+    print("request:($postData)");
     try {
-      final response = http.post(AppUrls.get_access_token_url,
-          headers: getDefaultHeader(),
-          body: postData);
+      final response = await http.post(AppUrls.get_access_token_url,
+          headers:getDefaultHeader(),
+          body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -67,11 +68,12 @@ class ApiService {
   }
 
   Future<dynamic> protectedPost({String url,Map<String,dynamic> postData}) async {
+    print("request:($postData)");
     var responseJson;
     try {
-      final response = http.post(AppUrls.get_access_token_url,
+      final response = await http.post(AppUrls.get_access_token_url,
           headers: getProtectedHeader(),
-          body: postData);
+          body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -88,11 +90,11 @@ class ApiService {
       case 400:
         throw BadRequestException(response.body.toString());
       case 401:
-
+        throw InvalidInputException('Invalid request');
       case 403:
         throw UnauthorisedException(response.body.toString());
       case 500:
-
+        throw InvalidInputException('Invalid request');
       default:
         throw FetchDataException(
             'Error occured while Communication with Server with StatusCode : ${response
@@ -103,7 +105,7 @@ class ApiService {
   {
     String accessToken = "";
     return {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
       HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     };
@@ -112,7 +114,7 @@ class ApiService {
   {
     String accessToken = "";
     return {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json'
       //HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     };

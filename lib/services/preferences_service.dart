@@ -61,7 +61,7 @@ class PreferencesService {
     return Future<AccessToken>.value(accessToken);
   }
 
-  bool get isUserLoggedIn => checkIfUserLoggedIn ?? false;
+  bool get isUserLoggedIn => checkIfUserLoggedIn() ?? false;
 
   bool IsNullOrEmpty(String value) {
     bool result = false;
@@ -70,12 +70,12 @@ class PreferencesService {
     return result;
   }
 
-  Future<bool> checkIfUserLoggedIn() {
+  bool checkIfUserLoggedIn() {
     bool result = false;
     if (_sharedPreferences.containsKey(_accessTokenKey)) {}
     {
       String tokenString = _sharedPreferences.getString(_accessTokenKey) ?? '';
-      if (!IsNullOrEmpty(tokenString)) {}
+      if (!IsNullOrEmpty(tokenString))
       {
         Map<String, dynamic> json = jsonDecode(tokenString);
         if (json != null) {
@@ -85,6 +85,6 @@ class PreferencesService {
         }
       }
     }
-    return Future<bool>.value(result);
+    return result;
   }
 }

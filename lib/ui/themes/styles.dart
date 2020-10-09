@@ -110,8 +110,8 @@ final ThemeData appTheme = ThemeData(
       fontStyle: FontStyle.normal,
     ),
     bodyText1: TextStyle(
-      color: Color(0xdd000000),
-      fontSize: null,
+      color: Colors.white,
+      fontSize: fontSizeMedium,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),

@@ -45,7 +45,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
       (_) {
         if (model.showError == true) {
           showSnackBar(text: model.errorText, scaffoldKey: _scaffoldKey);
-          _showMyDialog();
+          //_showMyDialog();
           model.resetShowError();
         }
       },
@@ -110,6 +110,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
   Widget _buildPasswordField() {
     return Observer(
         builder: (_) => TextField(
+            obscureText: true,
             style: defaultTextFieldTextStyle,
             onChanged: (value) => model.password = value,
             decoration: InputDecoration(
@@ -132,10 +133,13 @@ class _LoginPageState extends BasePageState<LoginPage> {
       height: 50.0,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () {
+        onPressed: () async {
+          FocusScope.of(context).unfocus();
           model.validateAll();
           if(model.canLogin) {
-
+              LoaderService.instance.ShowLoader();
+              bool result = await model.try_login();
+              LoaderService.instance.HideLoader();
           }
         },
         shape:
