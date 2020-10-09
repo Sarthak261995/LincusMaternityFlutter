@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lincus_maternity/services/loader_service.dart';
 import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
@@ -24,13 +25,14 @@ class _LoginPageState extends BasePageState<LoginPage> {
   @override
   void initState() {
     super.initState();
-    //widget.store.loadInitialStories();
+    model.setupValidations();
   }
 
   final List<ReactionDisposer> _disposers = [];
 
   @override
   void dispose() {
+    model.dispose();
     _disposers.forEach((disposer) => disposer());
     super.dispose();
   }
@@ -88,7 +90,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
     return Observer(
         builder: (_) => TextField(
               style: defaultTextFieldTextStyle,
-              //onChanged: (value) => store.name = value,
+              onChanged: (value) => model.username = value,
               decoration: InputDecoration(
                 hintText: 'Email',
                 floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -96,7 +98,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
                 labelStyle: defaultTextFieldTextStyle,
                 prefixStyle: defaultTextFieldTextStyle,
                 errorStyle: defaultErrorTextStyle,
-                errorText: null,
+                errorText: model.error.username,
                 disabledBorder: defaultTextFieldUnderlineBorder,
                 enabledBorder: defaultTextFieldUnderlineBorder,
                 focusedBorder: defaultTextFieldUnderlineBorder,
@@ -109,7 +111,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
     return Observer(
         builder: (_) => TextField(
             style: defaultTextFieldTextStyle,
-            //onChanged: (value) => store.name = value,
+            onChanged: (value) => model.password = value,
             decoration: InputDecoration(
               hintText: 'Password',
               floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -117,7 +119,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
               labelStyle: defaultTextFieldTextStyle,
               prefixStyle: defaultTextFieldTextStyle,
               errorStyle: defaultErrorTextStyle,
-              errorText: null,
+              errorText: model.error.password,
               disabledBorder: defaultTextFieldUnderlineBorder,
               enabledBorder: defaultTextFieldUnderlineBorder,
               focusedBorder: defaultTextFieldUnderlineBorder,
@@ -130,7 +132,12 @@ class _LoginPageState extends BasePageState<LoginPage> {
       height: 50.0,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () {},
+        onPressed: () {
+          model.validateAll();
+          if(model.canLogin) {
+
+          }
+        },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
         padding: EdgeInsets.all(0.0),
@@ -228,6 +235,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     super.currentContext = context;
+    LoaderService.instance.InitiateLoader(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
