@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:lincus_maternity/models/User/basic_info.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,6 +7,9 @@ class PreferencesService {
   static final String _useDarkModeKey = 'useDarkMode';
   static final String _favouritesKey = 'favourites';
   static final String _accessTokenKey = 'accessTokenKey';
+  static final String _userNameKey = 'usernameKey';
+  static final String _passwordKey = 'passwordKey';
+  static final String _basicInfoKey = 'basicInfoKey';
 
   SharedPreferences _sharedPreferences;
 
@@ -20,6 +24,18 @@ class PreferencesService {
   }
 
   bool get useDarkMode => _sharedPreferences.getBool(_useDarkModeKey) ?? false;
+
+  set userName(String username) {
+    _sharedPreferences.setString(_userNameKey, username);
+  }
+
+  String get userName => _sharedPreferences.getString(_userNameKey) ?? '';
+
+  set password(String password) {
+    _sharedPreferences.setString(_passwordKey, password);
+  }
+
+  String get password => _sharedPreferences.getString(_passwordKey) ?? '';
 
   List<String> get favourites =>
       _sharedPreferences.getStringList(_favouritesKey) ?? List<String>();
@@ -61,12 +77,39 @@ class PreferencesService {
     return Future<AccessToken>.value(accessToken);
   }
 
+  Future<bool> deleteAccessToken() {
+    _sharedPreferences.setString(_accessTokenKey, '');
+    return Future<bool>.value(true);
+  }
+
+  Future<void> saveUserBasicDetails(UserBasicInfo info) {
+    if (info != null && !IsNullOrEmpty(info.id)) {
+      String serialisedInfo = jsonEncode(info);
+      _sharedPreferences.setString(_basicInfoKey, serialisedInfo);
+    }
+  }
+
+  Future<UserBasicInfo> getUserBasicDetails() {
+    UserBasicInfo userBasicInfo;
+    if (_sharedPreferences.containsKey(_basicInfoKey)) {}
+    {
+      String tokenString = _sharedPreferences.getString(_basicInfoKey) ?? '';
+      if (!IsNullOrEmpty(tokenString)) {}
+      {
+        Map<String, dynamic> json = jsonDecode(tokenString);
+        if (json != null) {
+          userBasicInfo = UserBasicInfo.fromJson(json);
+        }
+      }
+    }
+    return Future<UserBasicInfo>.value(userBasicInfo);
+  }
+
   bool get isUserLoggedIn => checkIfUserLoggedIn() ?? false;
 
   bool IsNullOrEmpty(String value) {
     bool result = false;
-    if (value == null || value.isEmpty)
-      result = true;
+    if (value == null || value.isEmpty) result = true;
     return result;
   }
 
@@ -75,12 +118,11 @@ class PreferencesService {
     if (_sharedPreferences.containsKey(_accessTokenKey)) {}
     {
       String tokenString = _sharedPreferences.getString(_accessTokenKey) ?? '';
-      if (!IsNullOrEmpty(tokenString))
-      {
+      if (!IsNullOrEmpty(tokenString)) {
         Map<String, dynamic> json = jsonDecode(tokenString);
         if (json != null) {
           AccessToken accessToken = AccessToken.fromJson(json);
-          if(accessToken != null && !IsNullOrEmpty(accessToken.accessToken))
+          if (accessToken != null && !IsNullOrEmpty(accessToken.accessToken))
             result = true;
         }
       }

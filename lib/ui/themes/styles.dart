@@ -112,7 +112,7 @@ final ThemeData appTheme = ThemeData(
     bodyText1: TextStyle(
       color: Colors.white,
       fontSize: fontSizeMedium,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w600,
       fontStyle: FontStyle.normal,
     ),
     bodyText2: TextStyle(
@@ -502,19 +502,27 @@ double fontSizeIcon = 54;
 double fontSize64 = 64;
 
 var defaultTextFieldUnderlineBorder = UnderlineInputBorder(
-    borderSide:
-    BorderSide(color: Colors.grey.withOpacity(0.9)));
+    borderSide: BorderSide(color: Colors.grey.withOpacity(0.9)));
 
-var defaultErrorTextFieldUnderlineBorder = UnderlineInputBorder(
-    borderSide:
-    BorderSide(color: Colors.red));
+var defaultErrorTextFieldUnderlineBorder =
+    UnderlineInputBorder(borderSide: BorderSide(color: Colors.red));
 
 var defaultErrorTextStyle = TextStyle(
-    fontSize: fontSizeLarge,
-    color: Colors.red,
-    fontWeight: FontWeight.normal);
+    fontSize: fontSizeLarge, color: Colors.red, fontWeight: FontWeight.normal);
 
 var defaultTextFieldTextStyle = TextStyle(
     fontSize: fontSizeExtraLarge,
     color: Colors.black,
     fontWeight: FontWeight.w600);
+
+Color appBodyTextBlackColor = Color(0XFF231F20);
+Color appBackgroundColor = Color(0XFFF2F2F2);
+Color appBlueColor = Color(0XFF3C4CC1);
+Color appLightSkyBlueColor = Color(0XFF8CCDE9);
+Color appDarkSkyBlueColor = Color(0XFF49A2E0);
+Color appPurpleColor = Color(0XFF7877DED);
+Color appPinkColor = Color(0XFFE68CE8);
+Color appDarkPinkColor = Color(0XFFE34c79);
+Color appGreenColor = Color(0XFFB6EFB0);
+Color appSkyShadeColor3 = Color(0XFF6CC4C7);
+Color appLightGreenColor = Color(0xFF7EE355);

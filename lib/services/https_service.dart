@@ -1,12 +1,15 @@
 import 'package:http/http.dart';
+import 'package:lincus_maternity/models/User/Response/basic_info_response.dart';
 import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/authentication/request/access_token_request.dart';
-import 'package:lincus_maternity/models/enums/misc_enums.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/models/urls.dart';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:lincus_maternity/stores/locator.dart';
+
 class ApiService {
   var http;
 
@@ -14,38 +17,46 @@ class ApiService {
     http = new Client();
   }
 
-  Future<AccessToken> getAccessToken(
-      {String username, String password}) async {
+  Future<AccessToken> getAccessToken({String username, String password}) async {
     var response = new AccessToken();
     if (username.isNotEmpty && password.isNotEmpty) {
-      var request = new AccessTokenRequest(username: username,
+      var request = new AccessTokenRequest(
+          username: username,
           password: password,
           grantType: AppConstants.grantTypePassword,
           clientId: AppConstants.client_id,
           clientSecret: AppConstants.client_secret);
-      final api_response = await anonymousPost(url:AppUrls.get_access_token_url,postData: request.toJson());
-        response = AccessToken.fromJson(api_response);
+      final api_response = await anonymousPost(
+          url: AppUrls.get_access_token_url, postData: request.toJson());
+      response = AccessToken.fromJson(api_response);
     }
     return Future<AccessToken>.value(response);
   }
 
-  _decodeResponse(Response response) =>
-      json.decode(response.body);
+  Future<BasicInfoResponse> getUserBasicInfo() async {
+    var response = new BasicInfoResponse();
+    final apiResponse = await protectedGet(AppUrls.get_basic_info_url);
+    response = BasicInfoResponse.fromJson(apiResponse);
+    return Future<BasicInfoResponse>.value(response);
+  }
+
+  _decodeResponse(Response response) => json.decode(response.body);
 
   Future<dynamic> anonymousGet(String url) async {
     var responseJson;
     try {
-      final response = await http.get(url,headers: getDefaultHeader());
+      final response = await http.get(url, headers: getDefaultHeader());
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
+
   Future<dynamic> protectedGet(String url) async {
     var responseJson;
     try {
-      final response = await http.get(url,headers: getProtectedHeader());
+      final response = await http.get(url, headers: getProtectedHeader());
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -53,13 +64,13 @@ class ApiService {
     return responseJson;
   }
 
-  Future<dynamic> anonymousPost({String url,Map<String,dynamic> postData}) async {
+  Future<dynamic> anonymousPost(
+      {String url, Map<String, dynamic> postData}) async {
     var responseJson;
     print("request:($postData)");
     try {
       final response = await http.post(AppUrls.get_access_token_url,
-          headers:getDefaultHeader(),
-          body: jsonEncode(postData));
+          headers: getDefaultHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -67,13 +78,13 @@ class ApiService {
     return responseJson;
   }
 
-  Future<dynamic> protectedPost({String url,Map<String,dynamic> postData}) async {
+  Future<dynamic> protectedPost(
+      {String url, Map<String, dynamic> postData}) async {
     print("request:($postData)");
     var responseJson;
     try {
       final response = await http.post(AppUrls.get_access_token_url,
-          headers: getProtectedHeader(),
-          body: jsonEncode(postData));
+          headers: getProtectedHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -97,25 +108,25 @@ class ApiService {
         throw InvalidInputException('Invalid request');
       default:
         throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response
-                .statusCode}');
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
     }
   }
-  Map<String,String> getProtectedHeader()
-  {
-    String accessToken = "";
+
+  Map<String, String> getProtectedHeader() {
+    //String accessToken = AppLocator.current_user.accessToken?.accessToken ?? '';
     return {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      HttpHeaders.authorizationHeader:
+          'Bearer ${AppLocator.current_user.accessToken?.accessToken ?? ''}',
     };
   }
-  Map<String,String> getDefaultHeader()
-  {
-    String accessToken = "";
+
+  Map<String, String> getDefaultHeader() {
+    //String accessToken = AppLocator.current_user.accessToken?.accessToken ?? '';
     return {
       'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
       //HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     };
   }

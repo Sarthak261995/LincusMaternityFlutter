@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lincus_maternity/services/loader_service.dart';
-import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:lincus_maternity/ui/pages/home_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 import '../base_page.dart';
@@ -136,10 +135,20 @@ class _LoginPageState extends BasePageState<LoginPage> {
         onPressed: () async {
           FocusScope.of(context).unfocus();
           model.validateAll();
-          if(model.canLogin) {
-              LoaderService.instance.ShowLoader();
-              bool result = await model.try_login();
-              LoaderService.instance.HideLoader();
+          if (model.canLogin) {
+            await LoaderService.instance.ShowLoader(message: "Authenticating");
+            bool result = await model.try_login();
+            if (result) {
+              await LoaderService.instance.HideLoader();
+              await Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          HomePage(title: "HomePage")));
+            } else {
+              await LoaderService.instance.HideLoader();
+              AppLocator.preferences_service.deleteAccessToken();
+            }
           }
         },
         shape:
@@ -148,7 +157,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
         child: Ink(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Color(0XFFB6EFB0), Colors.lightGreen[400]],
+                  colors: [appGreenColor, appLightGreenColor],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   stops: [0.1, 0.6]),
@@ -182,10 +191,7 @@ class _LoginPageState extends BasePageState<LoginPage> {
         child: Ink(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [
-                    Color(0XFF787DED),
-                    Color(0XFFE68CE8).withOpacity(0.7)
-                  ],
+                  colors: [appBlueColor, appPinkColor],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   stops: [0.1, 0.6]),

@@ -11,39 +11,31 @@ class LoaderService {
     return _instance;
   }
 
-  LoaderService._internal() {
-  }
-  void ShowLoader({String message='Loading'})
-  {
-    if(pr == null)
-    {
+  LoaderService._internal() {}
+  Future<void> ShowLoader({String message = 'Loading'}) async {
+    if (pr == null) {
       InitiateLoader(context);
     }
     pr.style(message: message);
-    if(!pr.isShowing())
-    {
-      pr.show();
+    if (!pr.isShowing()) {
+      await pr.show();
     }
   }
-  void HideLoader()
-  {
-    if(pr == null)
-    {
+
+  Future<void> HideLoader() async {
+    if (pr == null) {
       InitiateLoader(context);
     }
-    if(pr.isShowing())
-    {
-      pr.hide();
+    if (pr.isShowing()) {
+      await pr.hide();
     }
   }
-  void InitiateLoader(BuildContext context)
-  {
+
+  void InitiateLoader(BuildContext context) {
     this.context = context;
-    pr = ProgressDialog(
-        context,
+    pr = ProgressDialog(context,
         type: ProgressDialogType.Normal,
         textDirection: TextDirection.ltr,
-        isDismissible: false
-    );
+        isDismissible: false);
   }
 }

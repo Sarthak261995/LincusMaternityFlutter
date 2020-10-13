@@ -1,3 +1,4 @@
+import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/services/https_service.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
@@ -5,6 +6,7 @@ import 'package:lincus_maternity/stores/locator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 part 'login_store.g.dart';
+
 class LoginStore = LoginStoreBase with _$LoginStore;
 
 abstract class LoginStoreBase with Store {
@@ -28,36 +30,42 @@ abstract class LoginStoreBase with Store {
   @computed
   bool get canLogin => !error.hasErrors;
 
-  /// when the store is created, we read in the current settings immediately to avoid the scenario where
-  /// the values displayed will change upon switching to the settings tab
-  LoginStoreBase({this.preferencesService,this.apiService}) {
-  }
+  CurrentUser get currentUser => AppLocator.current_user;
+  LoginStoreBase({this.preferencesService, this.apiService}) {}
 
   @action
-  Future<bool> try_login() async{
+  Future<bool> try_login() async {
     bool result = false;
-    try
-    {
-      var loginResponse = await apiService.getAccessToken(username: username,password: password);
-      if(loginResponse != null && !isNull(loginResponse.accessToken) && loginResponse.accessToken.isNotEmpty) {
-        AppLocator.preferences_service.saveAccessToken(loginResponse);
-        result = true;
-        errorText = 'Login success';
-        showError = true;
+    try {
+      var loginResponse = await apiService.getAccessToken(
+          username: username, password: password);
+      if (loginResponse != null &&
+          !isNull(loginResponse.accessToken) &&
+          loginResponse.accessToken.isNotEmpty) {
+        await AppLocator.preferences_service.saveAccessToken(loginResponse);
+        currentUser.accessToken = loginResponse;
+        preferencesService.userName = username;
+        preferencesService.password = password;
+        await Future<void>.delayed(Duration(seconds: 1));
+        var userDetails = await apiService.getUserBasicInfo();
+        if (userDetails.status == 200 && userDetails.data != null) {
+          await preferencesService.saveUserBasicDetails(userDetails.data);
+          await currentUser.LoadUserOnlyData();
+          result = true;
+          errorText = 'Login success';
+          showError = true;
+        } else {
+          errorText = 'Invalid credential';
+          showError = true;
+        }
       }
-    }
-    on FetchDataException {
+    } on FetchDataException {
       errorText = 'No Internet connection';
       showError = true;
-    }
-    catch(e)
-    {
+    } catch (e) {
       errorText = 'Invalid credential';
       showError = true;
-    }
-    finally
-    {
-    }
+    } finally {}
     return Future<bool>.value(result);
   }
 
@@ -105,7 +113,7 @@ abstract class LoginStoreBase with Store {
   }
 
   @action
-  void clear_data(){
+  void clear_data() {
     username = "";
     password = "";
     error.username = null;
@@ -114,8 +122,7 @@ abstract class LoginStoreBase with Store {
   }
 
   @action
-  void resetShowError()
-  {
+  void resetShowError() {
     showError = null;
     errorText = "";
   }
