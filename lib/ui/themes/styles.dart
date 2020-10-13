@@ -526,3 +526,4 @@ Color appDarkPinkColor = Color(0XFFE34c79);
 Color appGreenColor = Color(0XFFB6EFB0);
 Color appSkyShadeColor3 = Color(0XFF6CC4C7);
 Color appLightGreenColor = Color(0xFF7EE355);
+Color appPaleColor = Color(0xFFF2DDD4);

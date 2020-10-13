@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/ui/themes/styles.dart';
 
 class HomeTabView extends StatefulWidget {
   @override
@@ -6,41 +9,480 @@ class HomeTabView extends StatefulWidget {
 }
 
 class _HomeTabViewState extends State<HomeTabView> {
-  int selectedIndex = 0;
-  final List<String> categories = ['Messages', 'Online', 'Groups', 'Requests'];
+  bool _wellBeingVisible = true;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90.0,
-      color: Theme.of(context).primaryColor,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 30.0,
-              ),
+    Widget buildMoreButton() {
+      return Container(
+        height: 40.0,
+        child: RaisedButton(
+          onPressed: () {
+            setState(() {
+              _wellBeingVisible = false;
+            });
+          },
+          elevation: 5,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+          padding: EdgeInsets.all(0.0),
+          child: Ink(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [appBlueColor, appPinkColor],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    stops: [0.1, 0.6]),
+                borderRadius: BorderRadius.circular(30.0)),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 150.0, minHeight: 40.0),
+              alignment: Alignment.center,
               child: Text(
-                categories[index],
+                "More",
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: index == selectedIndex ? Colors.white : Colors.white60,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
+                    color: Colors.white,
+                    fontSize: fontSize22,
+                    fontWeight: FontWeight.w600),
               ),
             ),
-          );
-        },
+          ),
+        ),
+      );
+    }
+
+    Widget buildCreateBirthPlanButton() {
+      return Container(
+        height: 40.0,
+        child: RaisedButton(
+          onPressed: () {
+            setState(() {
+              _wellBeingVisible = true;
+            });
+          },
+          elevation: 5,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+          padding: EdgeInsets.all(0.0),
+          child: Ink(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [appBlueColor, appPinkColor],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    stops: [0.1, 0.6]),
+                borderRadius: BorderRadius.circular(30.0)),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 200.0, minHeight: 40.0),
+              alignment: Alignment.center,
+              child: Text(
+                "Create a birthplan",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize22,
+                    fontWeight: FontWeight.w800),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget buildUpdateButton() {
+      return Container(
+        height: 40.0,
+        child: RaisedButton(
+          elevation: 5,
+          onPressed: () async {
+            FocusScope.of(context).unfocus();
+          },
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+          padding: EdgeInsets.all(0.0),
+          child: Ink(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [appGreenColor, appLightGreenColor],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    stops: [0.1, 0.6]),
+                borderRadius: BorderRadius.circular(30.0)),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 120.0, minHeight: 40.0),
+              alignment: Alignment.center,
+              child: Text(
+                "Update",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: appBodyTextBlackColor,
+                    fontSize: fontSize22,
+                    fontWeight: FontWeight.w800),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget buildWellbeingView() {
+      return Column(
+        key: UniqueKey(),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Wellbeing',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+                fontSize: fontSize24),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          GradientCircularProgressIndicator(
+              gradientColors: [
+                appGreenColor,
+                appLightGreenColor,
+                appGreenColor,
+                appLightGreenColor
+              ],
+              radius: 80,
+              strokeWidth: 7,
+              strokeRound: true,
+              backgroundColor: Colors.grey,
+              value: 0.95),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: Container(
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.topCenter,
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(40),
+                        topLeft: Radius.circular(40)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 3.0,
+                          spreadRadius: 2),
+                    ]),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/images/Avacado.png',
+                          width: 100,
+                          height: 100,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Week 16',
+                          style: TextStyle(
+                              color: appPurpleColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: fontSize24),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Your baby is about the size of',
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: appBodyTextBlackColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: fontSizeLarge),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildMoreButton(),
+                      ],
+                    ),
+                  ),
+                )),
+          )
+        ],
+      );
+    }
+
+    Widget buildWellbeingDetailedView() {
+      return Column(
+        key: UniqueKey(),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: Container(
+                alignment: Alignment.topCenter,
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(40),
+                        topLeft: Radius.circular(40)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 3.0,
+                          spreadRadius: 2),
+                    ]),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(10),
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/images/Avacado.png',
+                        width: 100,
+                        height: 100,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Week 16',
+                        style: TextStyle(
+                            color: appPurpleColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: fontSize24),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child: Text(
+                          'Your baby is about the size of avocado it weigh aproximately 140 grams and is 13cm in length',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: appBodyTextBlackColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: fontSizeLarge),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/images/datepurple.png',
+                              fit: BoxFit.contain, height: 25, width: 25),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: RichText(
+                                text: TextSpan(
+                                    text: 'Due date: ',
+                                    style: TextStyle(
+                                      color: appPurpleColor,
+                                      fontSize: fontSizeLarge,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                      text: '01 October',
+                                      style: TextStyle(
+                                          color: appBodyTextBlackColor,
+                                          fontSize: fontSizeLarge,
+                                          fontWeight: FontWeight.normal))
+                                ])),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/images/watch.png',
+                              fit: BoxFit.contain, height: 25, width: 25),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: RichText(
+                                text: TextSpan(
+                                    text: 'Trimster: ',
+                                    style: TextStyle(
+                                      color: appPurpleColor,
+                                      fontSize: fontSizeLarge,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                      text: '2',
+                                      style: TextStyle(
+                                          color: appBodyTextBlackColor,
+                                          fontSize: fontSizeLarge,
+                                          fontWeight: FontWeight.normal))
+                                ])),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset('assets/images/gender.png',
+                              fit: BoxFit.contain, height: 25, width: 25),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: RichText(
+                                text: TextSpan(
+                                    text: 'Gender: ',
+                                    style: TextStyle(
+                                      color: appPurpleColor,
+                                      fontSize: fontSizeLarge,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'N/A',
+                                      style: TextStyle(
+                                          color: appBodyTextBlackColor,
+                                          fontSize: fontSizeLarge,
+                                          fontWeight: FontWeight.normal))
+                                ])),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildUpdateButton(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      buildCreateBirthPlanButton(),
+                    ],
+                  ),
+                )),
+          )
+        ],
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: appBlueColor,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: -13,
+            top: -13,
+            child: SvgPicture.asset(
+              'assets/images/blob02.svg',
+              height: 100,
+              width: 100,
+              color: appPaleColor,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            top: -13,
+            right: -10,
+            child: SvgPicture.asset(
+              'assets/images/blob03.svg',
+              height: 100,
+              width: 100,
+              color: appGreenColor,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(left: 60),
+                  alignment: Alignment.centerRight,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          topLeft: Radius.circular(30)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            offset: Offset(0.0, 1.0), //(x,y)
+                            blurRadius: 3.0,
+                            spreadRadius: 2),
+                      ]),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Sarah Jones',
+                            style: TextStyle(
+                                color: appBodyTextBlackColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: fontSizeLarge),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30),
+                        child: Text(
+                          'Week 16',
+                          style: TextStyle(
+                              color: appPurpleColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: fontSize24),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: _wellBeingVisible
+                        ? buildWellbeingView()
+                        : buildWellbeingDetailedView(),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
