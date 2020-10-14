@@ -54,7 +54,7 @@ class _HomePageState extends BasePageState<HomePage> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            if (_selectedIndex != index) _selectedIndex = index;
           });
         },
         backgroundColor: Colors.transparent,

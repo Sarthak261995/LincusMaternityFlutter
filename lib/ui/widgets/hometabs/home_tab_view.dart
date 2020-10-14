@@ -73,7 +73,7 @@ class _HomeTabViewState extends State<HomeTabView> {
                     stops: [0.1, 0.6]),
                 borderRadius: BorderRadius.circular(30.0)),
             child: Container(
-              constraints: BoxConstraints(maxWidth: 200.0, minHeight: 40.0),
+              constraints: BoxConstraints(maxWidth: 250.0, minHeight: 40.0),
               alignment: Alignment.center,
               child: Text(
                 "Create a birthplan",
@@ -143,79 +143,140 @@ class _HomeTabViewState extends State<HomeTabView> {
           SizedBox(
             height: 20,
           ),
-          GradientCircularProgressIndicator(
-              gradientColors: [
-                appGreenColor,
-                appLightGreenColor,
-                appGreenColor,
-                appLightGreenColor
+          SizedBox(
+            height: 200,
+            width: 200,
+            child: Container(
+                child: Stack(
+              children: <Widget>[
+                Center(
+                  child: GradientCircularProgressIndicator(
+                      gradientColors: [
+                        appGreenColor,
+                        appLightGreenColor,
+                        appGreenColor,
+                        appLightGreenColor
+                      ],
+                      radius: 100,
+                      strokeWidth: 7,
+                      strokeRound: true,
+                      backgroundColor: Colors.grey,
+                      value: 0.95),
+                ),
+                Center(
+                  child: GradientCircularProgressIndicator(
+                      gradientColors: [
+                        appGreenColor,
+                        appLightGreenColor,
+                        appGreenColor,
+                        appLightGreenColor
+                      ],
+                      radius: 80,
+                      strokeWidth: 7,
+                      strokeRound: true,
+                      backgroundColor: Colors.grey,
+                      value: 0.95),
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '8/10',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.w900),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Last updated',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fontSizeLarge,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      Text(
+                        '15.2.2020',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fontSizeLarge,
+                            fontWeight: FontWeight.normal),
+                      )
+                    ],
+                  ),
+                )
               ],
-              radius: 80,
-              strokeWidth: 7,
-              strokeRound: true,
-              backgroundColor: Colors.grey,
-              value: 0.95),
+            )),
+          ),
           SizedBox(
             height: 20,
           ),
           Expanded(
-            child: Container(
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(40),
-                        topLeft: Radius.circular(40)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 3.0,
-                          spreadRadius: 2),
-                    ]),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/Avacado.png',
-                          width: 100,
-                          height: 100,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Week 16',
-                          style: TextStyle(
-                              color: appPurpleColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: fontSize24),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Your baby is about the size of',
-                          maxLines: 1,
-                          style: TextStyle(
-                              color: appBodyTextBlackColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: fontSizeLarge),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildMoreButton(),
-                      ],
+              child: Container(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  height: 300,
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(40),
+                          topLeft: Radius.circular(40)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            offset: Offset(0.0, 1.0), //(x,y)
+                            blurRadius: 3.0,
+                            spreadRadius: 2),
+                      ]),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/Avacado.png',
+                            width: 100,
+                            height: 100,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Week 16',
+                            style: TextStyle(
+                                color: appPurpleColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontSize24),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Your baby is about the size of',
+                            maxLines: 1,
+                            style: TextStyle(
+                                color: appBodyTextBlackColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: fontSizeLarge),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          buildMoreButton(),
+                        ],
+                      ),
                     ),
-                  ),
-                )),
-          )
+                  )),
+            ),
+          ))
         ],
       );
     }
@@ -250,6 +311,21 @@ class _HomeTabViewState extends State<HomeTabView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      Align(
+                        alignment: Alignment(0.8, 0.5),
+                        child: IconButton(
+                          iconSize: 40.0,
+                          icon: Icon(
+                            Icons.close_outlined,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _wellBeingVisible = true;
+                            });
+                          },
+                        ),
+                      ),
                       Image.asset(
                         'assets/images/Avacado.png',
                         width: 100,
