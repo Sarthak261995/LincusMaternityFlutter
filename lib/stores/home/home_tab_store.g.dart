@@ -57,6 +57,25 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
     });
   }
 
+  final _$getPregnancyDetailResponseFutureAtom =
+      Atom(name: 'HomeTabStoreBase.getPregnancyDetailResponseFuture');
+
+  @override
+  ObservableFuture<GetPregnancyDetailResponse>
+      get getPregnancyDetailResponseFuture {
+    _$getPregnancyDetailResponseFutureAtom.reportRead();
+    return super.getPregnancyDetailResponseFuture;
+  }
+
+  @override
+  set getPregnancyDetailResponseFuture(
+      ObservableFuture<GetPregnancyDetailResponse> value) {
+    _$getPregnancyDetailResponseFutureAtom
+        .reportWrite(value, super.getPregnancyDetailResponseFuture, () {
+      super.getPregnancyDetailResponseFuture = value;
+    });
+  }
+
   final _$wellbeingScoreAtom = Atom(name: 'HomeTabStoreBase.wellbeingScore');
 
   @override
@@ -120,12 +139,96 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
     });
   }
 
+  final _$weekNumberAtom = Atom(name: 'HomeTabStoreBase.weekNumber');
+
+  @override
+  String get weekNumber {
+    _$weekNumberAtom.reportRead();
+    return super.weekNumber;
+  }
+
+  @override
+  set weekNumber(String value) {
+    _$weekNumberAtom.reportWrite(value, super.weekNumber, () {
+      super.weekNumber = value;
+    });
+  }
+
+  final _$sizeTextAtom = Atom(name: 'HomeTabStoreBase.sizeText');
+
+  @override
+  String get sizeText {
+    _$sizeTextAtom.reportRead();
+    return super.sizeText;
+  }
+
+  @override
+  set sizeText(String value) {
+    _$sizeTextAtom.reportWrite(value, super.sizeText, () {
+      super.sizeText = value;
+    });
+  }
+
+  final _$dueDateAtom = Atom(name: 'HomeTabStoreBase.dueDate');
+
+  @override
+  String get dueDate {
+    _$dueDateAtom.reportRead();
+    return super.dueDate;
+  }
+
+  @override
+  set dueDate(String value) {
+    _$dueDateAtom.reportWrite(value, super.dueDate, () {
+      super.dueDate = value;
+    });
+  }
+
+  final _$trimesterAtom = Atom(name: 'HomeTabStoreBase.trimester');
+
+  @override
+  String get trimester {
+    _$trimesterAtom.reportRead();
+    return super.trimester;
+  }
+
+  @override
+  set trimester(String value) {
+    _$trimesterAtom.reportWrite(value, super.trimester, () {
+      super.trimester = value;
+    });
+  }
+
+  final _$genderAtom = Atom(name: 'HomeTabStoreBase.gender');
+
+  @override
+  String get gender {
+    _$genderAtom.reportRead();
+    return super.gender;
+  }
+
+  @override
+  set gender(String value) {
+    _$genderAtom.reportWrite(value, super.gender, () {
+      super.gender = value;
+    });
+  }
+
   final _$getWellbeingScoreAsyncAction =
       AsyncAction('HomeTabStoreBase.getWellbeingScore');
 
   @override
   Future<GetWellbeingScoreResponse> getWellbeingScore() {
     return _$getWellbeingScoreAsyncAction.run(() => super.getWellbeingScore());
+  }
+
+  final _$getPregnancyDetailsAsyncAction =
+      AsyncAction('HomeTabStoreBase.getPregnancyDetails');
+
+  @override
+  Future<GetPregnancyDetailResponse> getPregnancyDetails() {
+    return _$getPregnancyDetailsAsyncAction
+        .run(() => super.getPregnancyDetails());
   }
 
   final _$HomeTabStoreBaseActionController =
@@ -137,6 +240,17 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
         name: 'HomeTabStoreBase.initialiseWellbeingScore');
     try {
       return super.initialiseWellbeingScore();
+    } finally {
+      _$HomeTabStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  Future<dynamic> initialisePregnancyDetails() {
+    final _$actionInfo = _$HomeTabStoreBaseActionController.startAction(
+        name: 'HomeTabStoreBase.initialisePregnancyDetails');
+    try {
+      return super.initialisePregnancyDetails();
     } finally {
       _$HomeTabStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -159,10 +273,16 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
 showError: ${showError},
 isBusy: ${isBusy},
 getWellbeingScoreFuture: ${getWellbeingScoreFuture},
+getPregnancyDetailResponseFuture: ${getPregnancyDetailResponseFuture},
 wellbeingScore: ${wellbeingScore},
 wellbeingProgress: ${wellbeingProgress},
 userName: ${userName},
-lastUpdateDateWellbeingScore: ${lastUpdateDateWellbeingScore}
+lastUpdateDateWellbeingScore: ${lastUpdateDateWellbeingScore},
+weekNumber: ${weekNumber},
+sizeText: ${sizeText},
+dueDate: ${dueDate},
+trimester: ${trimester},
+gender: ${gender}
     ''';
   }
 }

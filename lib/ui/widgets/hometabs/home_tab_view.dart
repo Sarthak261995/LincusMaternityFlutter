@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
@@ -315,10 +316,10 @@ class _HomeTabViewState extends State<HomeTabView> {
             height: 20,
           ),
           Expanded(
-              child: Container(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
+            child: Container(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
                   height: 300,
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                   alignment: Alignment.topCenter,
@@ -335,48 +336,154 @@ class _HomeTabViewState extends State<HomeTabView> {
                             blurRadius: 3.0,
                             spreadRadius: 2),
                       ]),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
+                  child: Observer(builder: (_) {
+                    if (model.getPregnancyDetailResponseFuture == null) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Image.asset(
-                            'assets/images/Avacado.png',
-                            width: 100,
-                            height: 100,
-                          ),
                           SizedBox(
-                            height: 10,
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    appLightGreenColor)),
                           ),
-                          Text(
-                            'Week 16',
-                            style: TextStyle(
-                                color: appPurpleColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: fontSize24),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Your baby is about the size of',
-                            maxLines: 1,
-                            style: TextStyle(
-                                color: appBodyTextBlackColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: fontSizeLarge),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          buildMoreButton(),
+                          SizedBox(height: 10),
+                          Text('Fetching data...',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: fontSizeLarge)),
                         ],
-                      ),
-                    ),
-                  )),
+                      );
+                    } else {
+                      switch (model.getPregnancyDetailResponseFuture.status) {
+                        case FutureStatus.pending:
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        appLightGreenColor)),
+                              ),
+                              SizedBox(height: 10),
+                              Text('Fetching data...',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: fontSizeLarge)),
+                            ],
+                          );
+                        case FutureStatus.rejected:
+                          return Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Failed to load data...',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: fontSizeExtraLarge),
+                                ),
+                                RaisedButton(
+                                  color: appGreenColor,
+                                  child: Text('Retry',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: fontSizeExtraLarge)),
+                                  onPressed: model.initialisePregnancyDetails,
+                                )
+                              ],
+                            ),
+                          );
+
+                        case FutureStatus.fulfilled:
+                          GetPregnancyDetailResponse response =
+                              model.getPregnancyDetailResponseFuture.result;
+                          if (response == null ||
+                              response?.data == null ||
+                              response?.data?.additionalInfo == null ||
+                              response?.data?.additionalInfo?.weekDevelopment ==
+                                  null) {
+                            return Center(
+                              child: Text(
+                                'No pregnancy data available',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'WorkSans',
+                                    color: Colors.white,
+                                    fontSize: fontSize24),
+                              ),
+                            );
+                          } else {
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: <Widget>[
+                                  Image.asset(
+                                    'assets/images/Avacado.png',
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    model.weekNumber,
+                                    style: TextStyle(
+                                        color: appPurpleColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontSize24),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    model.sizeText,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        color: appBodyTextBlackColor,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: fontSizeLarge),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  buildMoreButton(),
+                                ],
+                              ),
+                            );
+                          }
+                          break;
+                        default:
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        appLightGreenColor)),
+                              ),
+                              SizedBox(height: 10),
+                              Text('Fetching data...',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: fontSizeLarge)),
+                            ],
+                          );
+                      }
+                    }
+                  }),
+                ),
+              ),
             ),
-          ))
+          )
         ],
       );
     }
@@ -639,14 +746,16 @@ class _HomeTabViewState extends State<HomeTabView> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 30),
-                        child: Text(
-                          'Week 16',
-                          style: TextStyle(
-                              color: appPurpleColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: fontSize24),
+                        child: Observer(
+                          builder: (context) => Text(
+                            model.weekNumber,
+                            style: TextStyle(
+                                color: appPurpleColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontSize24),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

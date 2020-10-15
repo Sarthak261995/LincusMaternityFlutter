@@ -24,6 +24,7 @@ class _HomePageState extends BasePageState<HomePage> {
   void initState() {
     super.initState();
     model.initialiseWellbeingScore();
+    model.initialisePregnancyDetails();
   }
 
   final List<ReactionDisposer> _disposers = [];

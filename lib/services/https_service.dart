@@ -5,6 +5,7 @@ import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/authentication/request/access_token_request.dart';
 import 'package:lincus_maternity/models/authentication/request/refresh_token_request.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
+import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/urls.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/services/jwt_decoder.dart';
@@ -49,6 +50,13 @@ class ApiService {
     final apiResponse = await protectedGet(AppUrls.get_wellbeing_score_url);
     response = GetWellbeingScoreResponse.fromJson(apiResponse);
     return Future<GetWellbeingScoreResponse>.value(response);
+  }
+
+  Future<GetPregnancyDetailResponse> getPregnancyDetails() async {
+    var response = new GetPregnancyDetailResponse();
+    final apiResponse = await protectedGet(AppUrls.get_pregnancy_details_url);
+    response = GetPregnancyDetailResponse.fromJson(apiResponse);
+    return Future<GetPregnancyDetailResponse>.value(response);
   }
 
   _decodeResponse(Response response) => json.decode(response.body);

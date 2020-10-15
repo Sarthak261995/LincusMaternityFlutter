@@ -7,7 +7,6 @@ class GetWellbeingScoreResponse {
   int status;
   String message;
   WellBeingScore data;
-
   GetWellbeingScoreResponse({this.status, this.message, this.data});
   factory GetWellbeingScoreResponse.fromJson(Map<String, dynamic> json) =>
       _$GetWellbeingScoreResponseFromJson(json);
