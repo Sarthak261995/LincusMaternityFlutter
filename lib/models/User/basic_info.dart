@@ -10,8 +10,21 @@ class UserBasicInfo {
   String surname;
   @JsonKey(name: 'centre_code')
   String centreCode;
+  String pictureFile;
+  String dob;
   String gender;
   String email;
+  String postcode;
+  String employment;
+  String education;
+  String height;
+  String waist;
+  @JsonKey(name: 'language_preference')
+  String languagePreference;
+  @JsonKey(name: 'default_language')
+  String defaultLanguage;
+  @JsonKey(name: 'profile_picture')
+  String profilePicture;
   @JsonKey(name: 'verified_timestamp')
   String verifiedTimestamp;
   String created;
@@ -25,8 +38,18 @@ class UserBasicInfo {
       this.forename,
       this.surname,
       this.centreCode,
+      this.pictureFile,
+      this.dob,
       this.gender,
       this.email,
+      this.postcode,
+      this.employment,
+      this.education,
+      this.height,
+      this.waist,
+      this.languagePreference,
+      this.defaultLanguage,
+      this.profilePicture,
       this.verifiedTimestamp,
       this.created,
       this.carer,

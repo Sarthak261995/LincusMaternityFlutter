@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 import '../wellbeing_score.dart';
 part 'get_wellbeing_score_response.g.dart';
 

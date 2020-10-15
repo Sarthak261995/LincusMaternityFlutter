@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
@@ -188,86 +189,108 @@ class _HomeTabViewState extends State<HomeTabView> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text(
+                      Text(
                         'Failed to load data.',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: Colors.red, fontSize: fontSizeExtraLarge),
                       ),
                       RaisedButton(
-                        child: const Text('Tap to try again'),
+                        color: appGreenColor,
+                        child: Text('Retry',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontSizeExtraLarge)),
                         onPressed: model.initialiseWellbeingScore,
                       )
                     ],
                   );
 
                 case FutureStatus.fulfilled:
-                  return SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: Container(
-                        child: Stack(
-                      children: <Widget>[
-                        Center(
-                          child: GradientCircularProgressIndicator(
-                              gradientColors: [
-                                appGreenColor,
-                                appLightGreenColor,
-                                appGreenColor,
-                                appLightGreenColor
-                              ],
-                              radius: 100,
-                              strokeWidth: 7,
-                              strokeRound: true,
-                              backgroundColor: Colors.grey,
-                              value: model.wellbeingProgress),
-                        ),
-                        Center(
-                          child: GradientCircularProgressIndicator(
-                              gradientColors: [
-                                appGreenColor,
-                                appLightGreenColor,
-                                appGreenColor,
-                                appLightGreenColor
-                              ],
-                              radius: 80,
-                              strokeWidth: 7,
-                              strokeRound: true,
-                              backgroundColor: Colors.grey,
-                              value: model.wellbeingProgress),
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                model.wellbeingScore,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w900),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'Last updated',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fontSizeLarge,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Text(
-                                model.lastUpdateDateWellbeingScore,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fontSizeLarge,
-                                    fontWeight: FontWeight.normal),
-                              )
-                            ],
+                  GetWellbeingScoreResponse response =
+                      model.getWellbeingScoreFuture.result;
+                  if (response == null || response.data == null) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        'No wellbeing data available',
+                        style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            color: Colors.white,
+                            fontSize: fontSize24),
+                      ),
+                    );
+                  } else {
+                    return SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: Container(
+                          child: Stack(
+                        children: <Widget>[
+                          Center(
+                            child: GradientCircularProgressIndicator(
+                                gradientColors: [
+                                  appGreenColor,
+                                  appLightGreenColor,
+                                  appGreenColor,
+                                  appLightGreenColor
+                                ],
+                                radius: 100,
+                                strokeWidth: 7,
+                                strokeRound: true,
+                                backgroundColor: Colors.grey,
+                                value: model.wellbeingProgress),
                           ),
-                        )
-                      ],
-                    )),
-                  );
+                          Center(
+                            child: GradientCircularProgressIndicator(
+                                gradientColors: [
+                                  appGreenColor,
+                                  appLightGreenColor,
+                                  appGreenColor,
+                                  appLightGreenColor
+                                ],
+                                radius: 80,
+                                strokeWidth: 7,
+                                strokeRound: true,
+                                backgroundColor: Colors.grey,
+                                value: model.wellbeingProgress),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  model.wellbeingScore,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Last updated',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: fontSizeLarge,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  model.lastUpdateDateWellbeingScore,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: fontSizeLarge,
+                                      fontWeight: FontWeight.normal),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      )),
+                    );
+                  }
+                  break;
                 default:
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
