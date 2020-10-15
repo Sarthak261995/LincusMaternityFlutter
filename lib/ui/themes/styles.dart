@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData appTheme = ThemeData(
+  fontFamily: 'WorkSans',
   primarySwatch: Colors.indigo,
   brightness: Brightness.light,
   primaryColor: Color(0xff3f51b5),

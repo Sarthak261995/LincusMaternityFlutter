@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
+import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/settings_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,8 +26,10 @@ void setupServiceLocator(SharedPreferences sharedPreferences) {
   // serviceLocator.registerLazySingleton<CurrencyService>(() => CurrencyServiceFake());
 
   // view models
-  serviceLocator.registerFactory<LoginStore>(() => LoginStore(
+  serviceLocator.registerLazySingleton<LoginStore>(() => LoginStore(
       preferencesService: serviceLocator<PreferencesService>(),
       apiService: serviceLocator<ApiService>()));
+  serviceLocator.registerLazySingleton<HomeTabStore>(() => HomeTabStore(
+      serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
   //serviceLocator.registerFactory<ChooseFavoritesViewModel>(() => ChooseFavoritesViewModel());
 }

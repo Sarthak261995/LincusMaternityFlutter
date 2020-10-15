@@ -1,5 +1,6 @@
 import 'package:lincus_maternity/models/User/basic_info.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
+import 'package:lincus_maternity/models/wellbeing/wellbeing_score.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 
 class CurrentUser {
@@ -8,6 +9,7 @@ class CurrentUser {
   PreferencesService preferencesService;
   AccessToken accessToken;
   UserBasicInfo userBasicInfo;
+  WellBeingScore wellBeingScore;
   CurrentUser(this.preferencesService);
 
   Future<void> LoadUserData() async {

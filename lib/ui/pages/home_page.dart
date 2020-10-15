@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lincus_maternity/services/loader_service.dart';
-import 'package:lincus_maternity/stores/authentication/login_store.dart';
+import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
 import 'package:lincus_maternity/ui/pages/base_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
@@ -10,19 +10,20 @@ import 'package:mobx/mobx.dart';
 class HomePage extends BasePage {
   final String title;
 
-  HomePage({String this.title});
+  HomePage({this.title});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends BasePageState<HomePage> {
-  LoginStore model = AppLocator.login_store;
+  HomeTabStore model = AppLocator.home_tab_store;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   @override
   void initState() {
     super.initState();
+    model.initialiseWellbeingScore();
   }
 
   final List<ReactionDisposer> _disposers = [];
@@ -37,6 +38,15 @@ class _HomePageState extends BasePageState<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _disposers.add(reaction(
+      (_) => model.showError,
+      (_) {
+        if (model.showError == true) {
+          showSnackBar(text: model.errorText, scaffoldKey: _scaffoldKey);
+          model.resetShowError();
+        }
+      },
+    ));
   }
 
   Widget _createBottomNavigationBar() {

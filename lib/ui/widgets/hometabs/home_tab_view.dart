@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/stores/home/home_tab_store.dart';
+import 'package:lincus_maternity/stores/locator.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
+import 'package:mobx/mobx.dart';
 
 class HomeTabView extends StatefulWidget {
   @override
@@ -10,7 +14,7 @@ class HomeTabView extends StatefulWidget {
 
 class _HomeTabViewState extends State<HomeTabView> {
   bool _wellBeingVisible = true;
-
+  HomeTabStore model = AppLocator.home_tab_store;
   @override
   Widget build(BuildContext context) {
     Widget buildMoreButton() {
@@ -143,74 +147,147 @@ class _HomeTabViewState extends State<HomeTabView> {
           SizedBox(
             height: 20,
           ),
-          SizedBox(
-            height: 200,
-            width: 200,
-            child: Container(
-                child: Stack(
-              children: <Widget>[
-                Center(
-                  child: GradientCircularProgressIndicator(
-                      gradientColors: [
-                        appGreenColor,
-                        appLightGreenColor,
-                        appGreenColor,
-                        appLightGreenColor
-                      ],
-                      radius: 100,
-                      strokeWidth: 7,
-                      strokeRound: true,
-                      backgroundColor: Colors.grey,
-                      value: 0.95),
-                ),
-                Center(
-                  child: GradientCircularProgressIndicator(
-                      gradientColors: [
-                        appGreenColor,
-                        appLightGreenColor,
-                        appGreenColor,
-                        appLightGreenColor
-                      ],
-                      radius: 80,
-                      strokeWidth: 7,
-                      strokeRound: true,
-                      backgroundColor: Colors.grey,
-                      value: 0.95),
-                ),
-                Center(
-                  child: Column(
+          Observer(builder: (_) {
+            if (model.getWellbeingScoreFuture == null) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(appLightGreenColor)),
+                  ),
+                  SizedBox(height: 10),
+                  Text('Fetching data...',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: fontSizeLarge)),
+                ],
+              );
+            } else {
+              switch (model.getWellbeingScoreFuture.status) {
+                case FutureStatus.pending:
+                  return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        '8/10',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.w900),
-                      ),
                       SizedBox(
-                        height: 10,
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                appLightGreenColor)),
                       ),
-                      Text(
-                        'Last updated',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: fontSizeLarge,
-                            fontWeight: FontWeight.normal),
+                      SizedBox(height: 10),
+                      Text('Fetching data...',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: fontSizeLarge)),
+                    ],
+                  );
+                case FutureStatus.rejected:
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        'Failed to load data.',
+                        style: TextStyle(color: Colors.red),
                       ),
-                      Text(
-                        '15.2.2020',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: fontSizeLarge,
-                            fontWeight: FontWeight.normal),
+                      RaisedButton(
+                        child: const Text('Tap to try again'),
+                        onPressed: model.initialiseWellbeingScore,
                       )
                     ],
-                  ),
-                )
-              ],
-            )),
-          ),
+                  );
+
+                case FutureStatus.fulfilled:
+                  return SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: Container(
+                        child: Stack(
+                      children: <Widget>[
+                        Center(
+                          child: GradientCircularProgressIndicator(
+                              gradientColors: [
+                                appGreenColor,
+                                appLightGreenColor,
+                                appGreenColor,
+                                appLightGreenColor
+                              ],
+                              radius: 100,
+                              strokeWidth: 7,
+                              strokeRound: true,
+                              backgroundColor: Colors.grey,
+                              value: model.wellbeingProgress),
+                        ),
+                        Center(
+                          child: GradientCircularProgressIndicator(
+                              gradientColors: [
+                                appGreenColor,
+                                appLightGreenColor,
+                                appGreenColor,
+                                appLightGreenColor
+                              ],
+                              radius: 80,
+                              strokeWidth: 7,
+                              strokeRound: true,
+                              backgroundColor: Colors.grey,
+                              value: model.wellbeingProgress),
+                        ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                model.wellbeingScore,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.w900),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Last updated',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fontSizeLarge,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                model.lastUpdateDateWellbeingScore,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fontSizeLarge,
+                                    fontWeight: FontWeight.normal),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+                  );
+                default:
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                appLightGreenColor)),
+                      ),
+                      SizedBox(height: 10),
+                      Text('Fetching data...',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: fontSizeLarge)),
+                    ],
+                  );
+              }
+            }
+          }),
           SizedBox(
             height: 20,
           ),
@@ -352,6 +429,7 @@ class _HomeTabViewState extends State<HomeTabView> {
                           style: TextStyle(
                               color: appBodyTextBlackColor,
                               fontWeight: FontWeight.w400,
+                              fontFamily: 'WorkSans',
                               fontSize: fontSizeLarge),
                         ),
                       ),
@@ -525,13 +603,15 @@ class _HomeTabViewState extends State<HomeTabView> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            'Sarah Jones',
-                            style: TextStyle(
-                                color: appBodyTextBlackColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: fontSizeLarge),
-                          ),
+                          Observer(
+                            builder: (context) => Text(
+                              model.userName,
+                              style: TextStyle(
+                                  color: appBodyTextBlackColor,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: fontSizeLarge),
+                            ),
+                          )
                         ],
                       ),
                       Padding(

@@ -31,7 +31,7 @@ abstract class LoginStoreBase with Store {
   bool get canLogin => !error.hasErrors;
 
   CurrentUser get currentUser => AppLocator.current_user;
-  LoginStoreBase({this.preferencesService, this.apiService}) {}
+  LoginStoreBase({this.preferencesService, this.apiService});
 
   @action
   Future<bool> try_login() async {

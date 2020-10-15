@@ -57,10 +57,10 @@ flutter:
     - assets/images/
   #   - images/a_dot_ham.jpeg
 
-fonts:
-    - family: WorkSans
-      fonts:
-        - asset: fonts/WorkSans-Regular.ttf
-          weight: 400
-        - asset: fonts/WorkSans-Bold.ttf
-          weight: 700
+  fonts:
+      - family: WorkSans
+        fonts:
+          - asset: fonts/WorkSans-Regular.ttf
+            weight: 400
+          - asset: fonts/WorkSans-Bold.ttf
+            weight: 700
