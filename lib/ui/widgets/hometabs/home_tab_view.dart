@@ -136,8 +136,8 @@ class _HomeTabViewState extends State<HomeTabView> {
           Text(
             'Wellbeing',
             style: TextStyle(
+                fontFamily: 'WorkSans',
                 color: Colors.white,
-                fontWeight: FontWeight.w400,
                 fontSize: fontSize24),
           ),
           SizedBox(

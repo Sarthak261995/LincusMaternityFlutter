@@ -3,12 +3,15 @@ import 'package:lincus_maternity/models/User/Response/basic_info_response.dart';
 import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/authentication/request/access_token_request.dart';
+import 'package:lincus_maternity/models/authentication/request/refresh_token_request.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/models/urls.dart';
+import 'package:lincus_maternity/services/jwt_decoder.dart';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:validators/validators.dart';
 
 class ApiService {
   var http;
@@ -56,6 +59,7 @@ class ApiService {
   Future<dynamic> protectedGet(String url) async {
     var responseJson;
     try {
+      await checkAndUpdateAccessToken();
       final response = await http.get(url, headers: getProtectedHeader());
       responseJson = _response(response);
     } on SocketException {
@@ -83,6 +87,7 @@ class ApiService {
     print("request:($postData)");
     var responseJson;
     try {
+      await checkAndUpdateAccessToken();
       final response = await http.post(AppUrls.get_access_token_url,
           headers: getProtectedHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
@@ -129,5 +134,30 @@ class ApiService {
       'Accept': 'application/json',
       //HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     };
+  }
+
+  Future<bool> checkAndUpdateAccessToken() async {
+    try {
+      if (AppLocator.current_user.accessToken != null &&
+          !isNull(AppLocator.current_user.accessToken.accessToken)) {
+        bool isExpired = JwtDecoder.isExpired(
+            AppLocator.current_user.accessToken.accessToken);
+        if (isExpired) {
+          var request = new RefreshTokenRequest(
+              refreshToken: AppLocator.current_user.accessToken.refreshToken,
+              grantType: AppConstants.grantTypeRefreshToken,
+              clientId: AppConstants.client_id,
+              clientSecret: AppConstants.client_secret);
+          final api_response = await anonymousPost(
+              url: AppUrls.get_access_token_url, postData: request.toJson());
+          var accessToken = AccessToken.fromJson(api_response);
+          if (accessToken != null && !isNull(accessToken.accessToken)) {
+            await AppLocator.preferences_service.saveAccessToken(accessToken);
+            AppLocator.current_user.accessToken = accessToken;
+          }
+        }
+      }
+    } catch (e) {}
+    return Future<bool>.value(true);
   }
 }
