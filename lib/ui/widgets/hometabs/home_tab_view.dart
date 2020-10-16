@@ -414,7 +414,7 @@ class _HomeTabViewState extends State<HomeTabView> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontFamily: 'WorkSans',
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontSize: fontSize24),
                               ),
                             );
@@ -541,26 +541,29 @@ class _HomeTabViewState extends State<HomeTabView> {
                       SizedBox(
                         height: 30,
                       ),
-                      Text(
-                        'Week 16',
-                        style: TextStyle(
-                            color: appPurpleColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: fontSize24),
-                      ),
+                      Observer(
+                          builder: (_) => Text(
+                                model.weekNumber,
+                                style: TextStyle(
+                                    color: appPurpleColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: fontSize24),
+                              )),
                       SizedBox(
                         height: 20,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 30, right: 30),
-                        child: Text(
-                          'Your baby is about the size of avocado it weigh aproximately 140 grams and is 13cm in length',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: appBodyTextBlackColor,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'WorkSans',
-                              fontSize: fontSizeLarge),
+                        child: Observer(
+                          builder: (context) => Text(
+                            model.sizeText,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: appBodyTextBlackColor,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'WorkSans',
+                                fontSize: fontSizeLarge),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -573,22 +576,24 @@ class _HomeTabViewState extends State<HomeTabView> {
                               fit: BoxFit.contain, height: 25, width: 25),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: RichText(
-                                text: TextSpan(
-                                    text: 'Due date: ',
-                                    style: TextStyle(
-                                      color: appPurpleColor,
-                                      fontSize: fontSizeLarge,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    children: <TextSpan>[
-                                  TextSpan(
-                                      text: '01 October',
+                            child: Observer(
+                              builder: (context) => RichText(
+                                  text: TextSpan(
+                                      text: 'Due date: ',
                                       style: TextStyle(
-                                          color: appBodyTextBlackColor,
-                                          fontSize: fontSizeLarge,
-                                          fontWeight: FontWeight.normal))
-                                ])),
+                                        color: appPurpleColor,
+                                        fontSize: fontSizeLarge,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                        text: model.dueDate,
+                                        style: TextStyle(
+                                            color: appBodyTextBlackColor,
+                                            fontSize: fontSizeLarge,
+                                            fontWeight: FontWeight.normal))
+                                  ])),
+                            ),
                           )
                         ],
                       ),
@@ -602,22 +607,24 @@ class _HomeTabViewState extends State<HomeTabView> {
                               fit: BoxFit.contain, height: 25, width: 25),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: RichText(
-                                text: TextSpan(
-                                    text: 'Trimster: ',
-                                    style: TextStyle(
-                                      color: appPurpleColor,
-                                      fontSize: fontSizeLarge,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    children: <TextSpan>[
-                                  TextSpan(
-                                      text: '2',
+                            child: Observer(
+                              builder: (context) => RichText(
+                                  text: TextSpan(
+                                      text: 'Trimster: ',
                                       style: TextStyle(
-                                          color: appBodyTextBlackColor,
-                                          fontSize: fontSizeLarge,
-                                          fontWeight: FontWeight.normal))
-                                ])),
+                                        color: appPurpleColor,
+                                        fontSize: fontSizeLarge,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                        text: model.trimester,
+                                        style: TextStyle(
+                                            color: appBodyTextBlackColor,
+                                            fontSize: fontSizeLarge,
+                                            fontWeight: FontWeight.normal))
+                                  ])),
+                            ),
                           )
                         ],
                       ),
@@ -631,22 +638,24 @@ class _HomeTabViewState extends State<HomeTabView> {
                               fit: BoxFit.contain, height: 25, width: 25),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: RichText(
-                                text: TextSpan(
-                                    text: 'Gender: ',
-                                    style: TextStyle(
-                                      color: appPurpleColor,
-                                      fontSize: fontSizeLarge,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'N/A',
+                            child: Observer(
+                              builder: (context) => RichText(
+                                  text: TextSpan(
+                                      text: 'Gender: ',
                                       style: TextStyle(
-                                          color: appBodyTextBlackColor,
-                                          fontSize: fontSizeLarge,
-                                          fontWeight: FontWeight.normal))
-                                ])),
+                                        color: appPurpleColor,
+                                        fontSize: fontSizeLarge,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                        text: model.gender,
+                                        style: TextStyle(
+                                            color: appBodyTextBlackColor,
+                                            fontSize: fontSizeLarge,
+                                            fontWeight: FontWeight.normal))
+                                  ])),
+                            ),
                           )
                         ],
                       ),

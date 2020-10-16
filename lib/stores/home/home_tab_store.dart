@@ -32,7 +32,7 @@ abstract class HomeTabStoreBase with Store {
   ObservableFuture<GetPregnancyDetailResponse> getPregnancyDetailResponseFuture;
 
   @observable
-  String wellbeingScore;
+  String wellbeingScore = '';
 
   @observable
   double wellbeingProgress = 0;
@@ -42,22 +42,22 @@ abstract class HomeTabStoreBase with Store {
       '${AppLocator.current_user.userBasicInfo.forename} ${AppLocator.current_user.userBasicInfo.surname}';
 
   @observable
-  String lastUpdateDateWellbeingScore;
+  String lastUpdateDateWellbeingScore = '';
 
   @observable
   String weekNumber = '';
 
   @observable
-  String sizeText;
+  String sizeText = '';
 
   @observable
-  String dueDate;
+  String dueDate = '';
 
   @observable
-  String trimester;
+  String trimester = '';
 
   @observable
-  String gender;
+  String gender = '';
 
   CurrentUser get currentUser => AppLocator.current_user;
 
