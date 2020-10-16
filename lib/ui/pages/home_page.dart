@@ -133,6 +133,16 @@ class _HomePageState extends BasePageState<HomePage> {
     );
   }
 
+  void openCloseDrawer(bool param) {
+    if (param) {
+      _scaffoldKey.currentState.openEndDrawer();
+    } else {
+      if (_scaffoldKey.currentState.isDrawerOpen) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.currentContext = context;
@@ -141,6 +151,62 @@ class _HomePageState extends BasePageState<HomePage> {
         resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         bottomNavigationBar: _createBottomNavigationBar(),
+        endDrawer: Drawer(
+            child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [appLightGreenColor, appGreenColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              stops: [0.1, 0.6],
+              tileMode: TileMode.clamp,
+            ),
+          ),
+          padding: EdgeInsets.only(top: 100),
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            children: [
+              ListTile(
+                leading: Image.asset(
+                  'assets/images/user.png',
+                  height: 35,
+                  width: 35,
+                  fit: BoxFit.contain,
+                ),
+                title: Text(
+                  "Profile",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize24,
+                      fontWeight: FontWeight.w500),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Image.asset(
+                  'assets/images/logout.png',
+                  height: 35,
+                  width: 35,
+                  fit: BoxFit.contain,
+                ),
+                title: Text(
+                  "Logout",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize24,
+                      fontWeight: FontWeight.w500),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        )),
+        endDrawerEnableOpenDragGesture: true,
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -148,7 +214,9 @@ class _HomePageState extends BasePageState<HomePage> {
             child: IndexedStack(
               index: _selectedIndex,
               children: <Widget>[
-                HomeTabView(),
+                HomeTabView(
+                  openCloseDrawer: openCloseDrawer,
+                ),
                 Container(
                   alignment: Alignment.bottomLeft,
                   color: Colors.blue,

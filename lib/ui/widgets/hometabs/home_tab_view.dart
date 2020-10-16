@@ -10,6 +10,8 @@ import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 
 class HomeTabView extends StatefulWidget {
+  final Function(bool) openCloseDrawer;
+  HomeTabView({@required this.openCloseDrawer});
   @override
   _HomeTabViewState createState() => _HomeTabViewState();
 }
@@ -704,9 +706,22 @@ class _HomeTabViewState extends State<HomeTabView> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 60),
+            padding: EdgeInsets.only(top: 40),
             child: Column(
               children: <Widget>[
+                Container(
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 20),
+                  width: double.infinity,
+                  child: IconButton(
+                    icon: Icon(Icons.menu),
+                    iconSize: 35,
+                    color: Colors.white,
+                    onPressed: () {
+                      widget.openCloseDrawer(true);
+                    },
+                  ),
+                ),
                 Container(
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.only(left: 60),
