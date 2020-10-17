@@ -132,12 +132,12 @@ abstract class HomeTabStoreBase with Store {
   }
 
   @action
-  Future initialiseWellbeingScore() {
+  void initialiseWellbeingScore() {
     getWellbeingScoreFuture = ObservableFuture(getWellbeingScore());
   }
 
   @action
-  Future initialisePregnancyDetails() {
+  void initialisePregnancyDetails() {
     getPregnancyDetailResponseFuture = ObservableFuture(getPregnancyDetails());
   }
 

@@ -3,6 +3,7 @@ import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
+import 'package:lincus_maternity/stores/home/measurement_tab_store.dart';
 import 'package:lincus_maternity/stores/settings_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,5 +32,8 @@ void setupServiceLocator(SharedPreferences sharedPreferences) {
       apiService: serviceLocator<ApiService>()));
   serviceLocator.registerLazySingleton<HomeTabStore>(() => HomeTabStore(
       serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
+  serviceLocator.registerLazySingleton<MeasurementTabStore>(() =>
+      MeasurementTabStore(
+          serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
   //serviceLocator.registerFactory<ChooseFavoritesViewModel>(() => ChooseFavoritesViewModel());
 }

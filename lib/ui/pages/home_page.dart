@@ -5,6 +5,7 @@ import 'package:lincus_maternity/stores/locator.dart';
 import 'package:lincus_maternity/ui/pages/base_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:lincus_maternity/ui/widgets/hometabs/home_tab_view.dart';
+import 'package:lincus_maternity/ui/widgets/measurementtabs/measurement_tab_view.dart';
 import 'package:mobx/mobx.dart';
 
 class HomePage extends BasePage {
@@ -65,7 +66,15 @@ class _HomePageState extends BasePageState<HomePage> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            if (_selectedIndex != index) _selectedIndex = index;
+            if (_selectedIndex != index) {
+              _selectedIndex = index;
+              if (index == 1) {
+                if (!AppLocator.measurement_tab_store.isInitialised) {
+                  AppLocator.measurement_tab_store
+                      .initialiseGetLatestMeasurements();
+                }
+              }
+            }
           });
         },
         backgroundColor: Colors.transparent,
@@ -217,21 +226,12 @@ class _HomePageState extends BasePageState<HomePage> {
                 HomeTabView(
                   openCloseDrawer: openCloseDrawer,
                 ),
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  color: Colors.blue,
-                  height: 300.0,
-                  width: 300.0,
-                ),
+                MeasurementTabView(openCloseDrawer: openCloseDrawer),
                 Container(
                   color: Colors.pink,
-                  height: 150.0,
-                  width: 150.0,
                 ),
                 Container(
                   color: Colors.yellow,
-                  height: 150.0,
-                  width: 150.0,
                 )
               ],
             )));

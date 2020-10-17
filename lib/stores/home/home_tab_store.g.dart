@@ -235,7 +235,7 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
       ActionController(name: 'HomeTabStoreBase');
 
   @override
-  Future<dynamic> initialiseWellbeingScore() {
+  void initialiseWellbeingScore() {
     final _$actionInfo = _$HomeTabStoreBaseActionController.startAction(
         name: 'HomeTabStoreBase.initialiseWellbeingScore');
     try {
@@ -246,7 +246,7 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
   }
 
   @override
-  Future<dynamic> initialisePregnancyDetails() {
+  void initialisePregnancyDetails() {
     final _$actionInfo = _$HomeTabStoreBaseActionController.startAction(
         name: 'HomeTabStoreBase.initialisePregnancyDetails');
     try {
