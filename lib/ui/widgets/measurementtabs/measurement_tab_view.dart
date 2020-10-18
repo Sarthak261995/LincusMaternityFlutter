@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/measurement/measurement_model.dart';
+import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
 import 'package:lincus_maternity/stores/home/measurement_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
@@ -19,7 +20,7 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
   MeasurementTabStore model = AppLocator.measurement_tab_store;
   @override
   Widget build(BuildContext context) {
-    Widget buildMoreButton() {
+    Widget addMeasurementButton() {
       return Container(
         height: 40.0,
         child: RaisedButton(
@@ -39,10 +40,10 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
                     stops: [0.1, 0.6]),
                 borderRadius: BorderRadius.circular(30.0)),
             child: Container(
-              constraints: BoxConstraints(maxWidth: 150.0, minHeight: 40.0),
+              constraints: BoxConstraints(maxWidth: 250.0, minHeight: 40.0),
               alignment: Alignment.center,
               child: Text(
-                "More",
+                "Add measurement",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,
@@ -133,7 +134,7 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: fontSize22,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -147,10 +148,55 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
       ]);
     }
 
+    Widget buildGoalsListBody(BuildContext cntxt, int index) {
+      MeasurementModel itm = model.goalsList.elementAt(index);
+      String imageUrl =
+          AppConstants.measurementIcon.replaceFirst('{icon_name}', itm.icon);
+      return ListTile(
+        leading: SizedBox(
+          height: 50,
+          width: 50,
+          child: Card(
+            elevation: 3,
+            shadowColor: Colors.grey,
+            child: Center(
+              child: SvgPicture.network(
+                imageUrl,
+                height: 30,
+                width: 30,
+                color: appBlueColor,
+                fit: BoxFit.cover,
+                placeholderBuilder: (BuildContext context) => Image.asset(
+                  'assets/images/image8.png',
+                  height: 30,
+                  width: 30,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ),
+        title: Text(
+          '${itm.value} ${itm.units} ${itm.type}',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: fontSize22),
+        ),
+      );
+    }
+
     int getItemMeasurementItemCount() {
       int count = 0;
       if (model?.latestMeasurementList?.length > 0 ?? false)
         count = model?.latestMeasurementList?.length;
+      return count;
+    }
+
+    int getGoalsItemCount() {
+      int count = 0;
+      if (model?.goalsList?.length > 0 ?? false)
+        count = model?.goalsList?.length;
       return count;
     }
 
@@ -264,36 +310,348 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
                   child: ListView(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 30),
+                        padding: EdgeInsets.zero,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              "Measurement",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: fontSize28,
-                                  fontWeight: FontWeight.w500),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Text(
+                                "Measurement",
+                                style: TextStyle(
+                                    color: appBodyTextBlackColor,
+                                    fontSize: fontSize28,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                             SizedBox(
                               height: 15,
                             ),
-                            Text(
-                              "Last reading",
-                              style: TextStyle(
-                                  color: appSkyShadeColor3,
-                                  fontSize: fontSizeExtraLarge,
-                                  fontWeight: FontWeight.w600),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Text(
+                                "Last reading",
+                                style: TextStyle(
+                                    color: appSkyShadeColor3,
+                                    fontSize: fontSizeExtraLarge,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
-                            Observer(
-                                builder: (context) => ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: getItemMeasurementItemCount(),
-                                    itemBuilder:
-                                        (BuildContext ctxt, int index) =>
-                                            buildLatestMeasurementBody(
-                                                ctxt, index))),
+                            Observer(builder: (_) {
+                              if (model.getLatestMeasurementFuture == null) {
+                                return Center(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  appLightGreenColor)),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text('Fetching data...',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: fontSizeLarge)),
+                                  ],
+                                ));
+                              } else {
+                                switch (
+                                    model.getLatestMeasurementFuture.status) {
+                                  case FutureStatus.pending:
+                                    return Center(
+                                        child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      appLightGreenColor)),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text('Fetching data...',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: fontSizeLarge)),
+                                      ],
+                                    ));
+                                  case FutureStatus.rejected:
+                                    return Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            'Failed to load data...',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: fontSizeExtraLarge),
+                                          ),
+                                          RaisedButton(
+                                            color: appGreenColor,
+                                            child: Text('Retry',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize:
+                                                        fontSizeExtraLarge)),
+                                            onPressed: model
+                                                .initialiseGetLatestMeasurements,
+                                          )
+                                        ],
+                                      ),
+                                    );
+
+                                  case FutureStatus.fulfilled:
+                                    GetLatestMeasurementResponse response =
+                                        model.getLatestMeasurementFuture.result;
+                                    if (response == null ||
+                                        response?.data == null ||
+                                        response?.data?.length == 0) {
+                                      return Center(
+                                        child: Text(
+                                          'No measurement submitted yet.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'WorkSans',
+                                              color: appBodyTextBlackColor,
+                                              fontSize: fontSize24),
+                                        ),
+                                      );
+                                    } else {
+                                      return ListView.builder(
+                                          padding:
+                                              const EdgeInsets.only(left: 30),
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              getItemMeasurementItemCount(),
+                                          itemBuilder:
+                                              (BuildContext ctxt, int index) =>
+                                                  buildLatestMeasurementBody(
+                                                      ctxt, index));
+                                    }
+                                    break;
+                                  default:
+                                    return Center(
+                                        child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      appLightGreenColor)),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text('Fetching data...',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: fontSizeLarge)),
+                                      ],
+                                    ));
+                                }
+                              }
+                            }),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Center(
+                              child: addMeasurementButton(),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Stack(
+                              children: <Widget>[
+                                Image.asset('assets/images/greenbg.png'),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 100.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 30,
+                                        ),
+                                        child: Text(
+                                          "Goals",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fontSize28,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Observer(builder: (_) {
+                                        if (model.getLatestMeasurementFuture ==
+                                            null) {
+                                          return Center(
+                                              child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child: CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                                Color>(
+                                                            appLightGreenColor)),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Text('Fetching data...',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: fontSizeLarge)),
+                                            ],
+                                          ));
+                                        } else {
+                                          switch (model
+                                              .getLatestMeasurementFuture
+                                              .status) {
+                                            case FutureStatus.pending:
+                                              return Center(
+                                                  child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: CircularProgressIndicator(
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                                appLightGreenColor)),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text('Fetching data...',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              fontSizeLarge)),
+                                                ],
+                                              ));
+                                            case FutureStatus.rejected:
+                                              return Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Failed to load data...',
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize:
+                                                              fontSizeExtraLarge),
+                                                    ),
+                                                    RaisedButton(
+                                                      color: appGreenColor,
+                                                      child: Text('Retry',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  fontSizeExtraLarge)),
+                                                      onPressed: model
+                                                          .initialiseGetLatestMeasurements,
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+
+                                            case FutureStatus.fulfilled:
+                                              GetLatestMeasurementResponse
+                                                  response = model
+                                                      .getLatestMeasurementFuture
+                                                      .result;
+                                              if (response == null ||
+                                                  response?.data == null ||
+                                                  response?.data?.length == 0 ||
+                                                  model.goalsList.length == 0) {
+                                                return Center(
+                                                  child: Text(
+                                                    'No goals added yet.',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'WorkSans',
+                                                        color:
+                                                            appBodyTextBlackColor,
+                                                        fontSize: fontSize24),
+                                                  ),
+                                                );
+                                              } else {
+                                                return ListView.builder(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 30),
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                        getGoalsItemCount(),
+                                                    itemBuilder:
+                                                        (BuildContext ctxt,
+                                                                int index) =>
+                                                            buildGoalsListBody(
+                                                                ctxt, index));
+                                              }
+                                              break;
+                                            default:
+                                              return Center(
+                                                  child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: CircularProgressIndicator(
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                                appLightGreenColor)),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text('Fetching data...',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              fontSizeLarge)),
+                                                ],
+                                              ));
+                                          }
+                                        }
+                                      })
+                                    ],
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                  ),
+                                )
+                              ],
+                            )
                           ],
                         ),
                       ),

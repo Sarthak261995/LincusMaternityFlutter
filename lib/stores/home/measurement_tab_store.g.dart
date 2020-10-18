@@ -91,6 +91,21 @@ mixin _$MeasurementTabStore on MeasurementTabStoreBase, Store {
     });
   }
 
+  final _$goalsListAtom = Atom(name: 'MeasurementTabStoreBase.goalsList');
+
+  @override
+  ObservableList<MeasurementModel> get goalsList {
+    _$goalsListAtom.reportRead();
+    return super.goalsList;
+  }
+
+  @override
+  set goalsList(ObservableList<MeasurementModel> value) {
+    _$goalsListAtom.reportWrite(value, super.goalsList, () {
+      super.goalsList = value;
+    });
+  }
+
   final _$weekNumberAtom = Atom(name: 'MeasurementTabStoreBase.weekNumber');
 
   @override
@@ -163,6 +178,7 @@ isBusy: ${isBusy},
 isInitialised: ${isInitialised},
 getLatestMeasurementFuture: ${getLatestMeasurementFuture},
 latestMeasurementList: ${latestMeasurementList},
+goalsList: ${goalsList},
 weekNumber: ${weekNumber},
 userName: ${userName}
     ''';

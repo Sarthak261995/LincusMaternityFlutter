@@ -36,6 +36,10 @@ abstract class MeasurementTabStoreBase with Store {
       ObservableList<MeasurementModel>();
 
   @observable
+  ObservableList<MeasurementModel> goalsList =
+      ObservableList<MeasurementModel>();
+
+  @observable
   String weekNumber = AppLocator.home_tab_store.weekNumber;
 
   @observable
@@ -57,8 +61,17 @@ abstract class MeasurementTabStoreBase with Store {
             latestMeasurementResponse.data;
         if (latestMeasurementResponse.data != null) {
           latestMeasurementList.clear();
+          goalsList.clear();
           latestMeasurementResponse.data
               .forEach((element) => latestMeasurementList.add(element));
+
+          if (latestMeasurementList.length >= 1) {
+            latestMeasurementList.forEach((element) {
+              if (element.goal != null) {
+                goalsList.add(element);
+              }
+            });
+          }
         }
         return Future<GetLatestMeasurementResponse>.value(
             latestMeasurementResponse);
