@@ -6,6 +6,7 @@ import 'package:lincus_maternity/models/measurement/measurement_model.dart';
 import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
 import 'package:lincus_maternity/stores/home/measurement_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:lincus_maternity/ui/pages/measurement/update_measurement_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 
@@ -108,7 +109,15 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
                   Container(
                     height: 40.0,
                     child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UpdateMeasurementPage(
+                                  title: 'UpdateMeasurementPage',
+                                  measurementModel: itm)),
+                        );
+                      },
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(80.0)),

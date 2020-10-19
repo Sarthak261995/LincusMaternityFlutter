@@ -13,8 +13,8 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark // transparent status bar
-      ));
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark));
   setupServiceLocator(sharedPreferences);
   Widget _defaultHome = new LoginPage(
     title: 'LoginPage',

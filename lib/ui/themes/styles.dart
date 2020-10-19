@@ -514,7 +514,7 @@ var defaultErrorTextStyle = TextStyle(
 var defaultTextFieldTextStyle = TextStyle(
     fontSize: fontSizeExtraLarge,
     color: Colors.black,
-    fontWeight: FontWeight.w600);
+    fontWeight: FontWeight.w500);
 
 Color appBodyTextBlackColor = Color(0XFF231F20);
 Color appBackgroundColor = Color(0XFFF2F2F2);
