@@ -1,5 +1,6 @@
 import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
+import 'package:lincus_maternity/models/pregnancy/pregnancy_details.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/services/https_service.dart';
@@ -27,6 +28,9 @@ abstract class HomeTabStoreBase with Store {
 
   @observable
   ObservableFuture<GetWellbeingScoreResponse> getWellbeingScoreFuture;
+
+  @observable
+  PregnancyDetails getPregnancyDetailResult;
 
   @observable
   ObservableFuture<GetPregnancyDetailResponse> getPregnancyDetailResponseFuture;
@@ -102,6 +106,8 @@ abstract class HomeTabStoreBase with Store {
           pregnancyDetailsResponse.status == 200 &&
           pregnancyDetailsResponse.data != null) {
         currentUser.pregnancyDetails = pregnancyDetailsResponse.data;
+        getPregnancyDetailResult = pregnancyDetailsResponse.data;
+
         if (pregnancyDetailsResponse.data?.additionalInfo?.weekDevelopment !=
                 null ??
             false) {
@@ -114,6 +120,7 @@ abstract class HomeTabStoreBase with Store {
           trimester = pregnancyDetailsResponse?.data?.additionalInfo?.trimester
                   ?.toString() ??
               '';
+          dueDate = pregnancyDetailsResponse?.data?.expected ?? '';
         }
         return Future<GetPregnancyDetailResponse>.value(
             pregnancyDetailsResponse);

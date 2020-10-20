@@ -6,8 +6,8 @@ import 'package:lincus_maternity/controls/my_text_field_timepicker.dart';
 import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/measurement/measurement_model.dart';
 import 'package:lincus_maternity/services/loader_service.dart';
-import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:lincus_maternity/stores/measurement/update_measurement_store.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 import '../base_page.dart';
@@ -16,20 +16,22 @@ import 'package:intl/intl.dart';
 class UpdateMeasurementPage extends BasePage {
   final String title;
   final MeasurementModel measurementModel;
-  UpdateMeasurementPage({this.title, this.measurementModel});
+  UpdateMeasurementPage({this.title, this.measurementModel}) {
+    AppLocator.update_measurement_store.measurementModel = measurementModel;
+  }
 
   @override
   _UpdateMeasurementPageState createState() => _UpdateMeasurementPageState();
 }
 
 class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
-  HomeTabStore model = AppLocator.home_tab_store;
+  UpdateMeasurementStore model = AppLocator.update_measurement_store;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    //model.setupValidations();
+    model.clear_data();
   }
 
   final List<ReactionDisposer> _disposers = [];
@@ -49,11 +51,54 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
       (_) {
         if (model.showError == true) {
           showSnackBar(text: model.errorText, scaffoldKey: _scaffoldKey);
-          //_showMyDialog();
           model.resetShowError();
         }
       },
     ));
+    _disposers.add(reaction(
+      (_) => model.showAlert,
+      (_) {
+        if (model.showAlert == true) {
+          showAlert(model.alertTitle, model.alertMessage);
+          model.resetAlertData();
+        }
+      },
+    ));
+  }
+
+  Widget buildGredientButton(String text, Function tap, double width,
+      List<Color> gredientColor, Color textColor) {
+    return Container(
+      height: 40.0,
+      child: RaisedButton(
+        elevation: 5,
+        onPressed: tap,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+        padding: EdgeInsets.all(0.0),
+        child: Ink(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: gredientColor,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0.1, 0.6]),
+              borderRadius: BorderRadius.circular(30.0)),
+          child: Container(
+            constraints: BoxConstraints(maxWidth: width, minHeight: 40.0),
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: textColor,
+                  fontSize: fontSize22,
+                  fontWeight: FontWeight.w800),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -124,7 +169,7 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                             boxShadow: [
                               BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
-                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  offset: Offset(0.0, 1.0),
                                   blurRadius: 3.0,
                                   spreadRadius: 2),
                             ]),
@@ -242,10 +287,14 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                             ),
                                             TextField(
                                               style: defaultTextFieldTextStyle,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               decoration: InputDecoration(
                                                   border:
                                                       defaultTextFieldUnderlineBorder),
-                                              onChanged: (value) {},
+                                              onChanged: (value) {
+                                                model.value = value;
+                                              },
                                             ),
                                             SizedBox(
                                               height: 15,
@@ -253,7 +302,23 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                             Container(
                                               height: 40.0,
                                               child: RaisedButton(
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  if (model
+                                                      .validateValueUpdate()) {
+                                                    await LoaderService.instance
+                                                        .ShowLoader(
+                                                            message:
+                                                                "Updating");
+                                                    bool result = await model
+                                                        .tryUpdateValue();
+                                                    await LoaderService.instance
+                                                        .HideLoader();
+                                                    if (result) {
+                                                      showAlert('Sucess',
+                                                          'Measurement updated sucessfully');
+                                                    }
+                                                  }
+                                                },
                                                 elevation: 5,
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
@@ -355,7 +420,9 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                                   .add(Duration(days: 366)),
                                               firstDate: DateTime.now(),
                                               initialDate: DateTime.now(),
-                                              onDateChanged: (selectedDate) {},
+                                              onDateChanged: (selectedDate) {
+                                                model.date = selectedDate;
+                                              },
                                             ),
                                             SizedBox(
                                               height: 15,
@@ -400,14 +467,15 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             MyTextFieldTimePicker(
-                                              labelText: null,
-                                              prefixIcon: null,
-                                              suffixIcon: null,
-                                              initialTime: TimeOfDay.now(),
-                                              timeFormat:
-                                                  TimeOfDayFormat.HH_dot_mm,
-                                              onTimeChanged: (selectedTime) {},
-                                            ),
+                                                labelText: null,
+                                                prefixIcon: null,
+                                                suffixIcon: null,
+                                                initialTime: TimeOfDay.now(),
+                                                timeFormat:
+                                                    TimeOfDayFormat.HH_dot_mm,
+                                                onTimeChanged: (selectedTime) {
+                                                  model.time = selectedTime;
+                                                }),
                                             SizedBox(
                                               height: 15,
                                             ),
@@ -463,6 +531,65 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                     ],
                                   ),
                                 ]),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(20.0),
+                              height: 250,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                        spreadRadius: 5),
+                                  ]),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      maxLines: null,
+                                      keyboardType: TextInputType.multiline,
+                                      onChanged: (value) {
+                                        model.note = value;
+                                      },
+                                      style: defaultTextFieldTextStyle,
+                                      decoration: new InputDecoration(
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.never,
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                          hintStyle: defaultTextFieldTextStyle,
+                                          hintText: 'Notes'),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: buildGredientButton('Update',
+                                        () async {
+                                      showAlert('Hello', 'Hi');
+                                      print('object');
+                                    },
+                                        200.0,
+                                        [appGreenColor, appLightGreenColor],
+                                        appBodyTextBlackColor),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 100,
+                            ),
                           ],
                         ),
                       )

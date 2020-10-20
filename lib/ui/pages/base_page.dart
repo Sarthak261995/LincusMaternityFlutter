@@ -23,4 +23,32 @@ class BasePageState<T extends BasePage> extends State<T> {
     );
     scaffoldKey.currentState.showSnackBar(snackBar);
   }
+
+  Future<void> showAlert(String title, String message,
+      {String acknowledgeText = 'Ok'}) async {
+    return await showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(acknowledgeText),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

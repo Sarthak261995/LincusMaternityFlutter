@@ -12,7 +12,7 @@ MeasurementModel _$MeasurementModelFromJson(Map<String, dynamic> json) {
     type: json['type'] as String,
     icon: json['icon'] as String,
     units: json['units'] as String ?? '',
-    value: json['value'] as int ?? 0,
+    value: (json['value'] as num)?.toDouble() ?? 0,
     userID: json['userID'] as int,
     bmId: json['bm_id'] as int,
     manual: json['manual'] as int,

@@ -9,7 +9,7 @@ class MeasurementModel {
   @JsonKey(defaultValue: '')
   String units;
   @JsonKey(defaultValue: 0)
-  int value;
+  double value;
   int userID;
   @JsonKey(name: 'bm_id')
   int bmId;

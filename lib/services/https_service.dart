@@ -5,6 +5,8 @@ import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/authentication/request/access_token_request.dart';
 import 'package:lincus_maternity/models/authentication/request/refresh_token_request.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
+import 'package:lincus_maternity/models/general_response_model.dart';
+import 'package:lincus_maternity/models/measurement/request/update_measurement_request.dart';
 import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/urls.dart';
@@ -67,6 +69,18 @@ class ApiService {
     return Future<GetLatestMeasurementResponse>.value(response);
   }
 
+  Future<GeneralResponseModel> updateMeasurement(
+      UpdateMeasurementRequest updateMeasurementRequest) async {
+    var response = new GeneralResponseModel();
+    if (updateMeasurementRequest != null) {
+      final api_response = await protectedPost(
+          url: AppUrls.update_measurement_url,
+          postData: updateMeasurementRequest.toJson());
+      response = GeneralResponseModel.fromJson(api_response);
+    }
+    return Future<GeneralResponseModel>.value(response);
+  }
+
   _decodeResponse(Response response) => json.decode(response.body);
 
   Future<dynamic> anonymousGet(String url) async {
@@ -97,7 +111,7 @@ class ApiService {
     var responseJson;
     print("request:($postData)");
     try {
-      final response = await http.post(AppUrls.get_access_token_url,
+      final response = await http.post(url,
           headers: getDefaultHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
@@ -112,7 +126,7 @@ class ApiService {
     var responseJson;
     try {
       await checkAndUpdateAccessToken();
-      final response = await http.post(AppUrls.get_access_token_url,
+      final response = await http.post(url,
           headers: getProtectedHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {
@@ -124,6 +138,7 @@ class ApiService {
   dynamic _response(Response response) {
     switch (response.statusCode) {
       case 200:
+      case 201:
         var responseJson = json.decode(response.body.toString());
         print(responseJson);
         return responseJson;

@@ -91,6 +91,7 @@ abstract class MeasurementTabStoreBase with Store {
 
   @action
   void initialiseGetLatestMeasurements() {
+    weekNumber = AppLocator.home_tab_store.weekNumber;
     getLatestMeasurementFuture = ObservableFuture(getLatestMeasurements());
   }
 

@@ -6,4 +6,5 @@ class AppUrls {
   static const get_wellbeing_score_url = base_url + "wellbeing/score";
   static const get_pregnancy_details_url = base_url + "maternity/pregnancy";
   static const get_measurement_latest_url = base_url + "measurements/latest";
+  static const update_measurement_url = base_url + "measurements";
 }

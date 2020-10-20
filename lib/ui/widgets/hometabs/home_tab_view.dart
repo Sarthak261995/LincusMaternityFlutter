@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
@@ -426,10 +427,39 @@ class _HomeTabViewState extends State<HomeTabView> {
                               padding: EdgeInsets.all(10),
                               child: Column(
                                 children: <Widget>[
-                                  Image.asset(
-                                    'assets/images/Avacado.png',
-                                    width: 100,
-                                    height: 100,
+                                  Observer(
+                                    builder: (context) {
+                                      if (response?.data?.additionalInfo
+                                                  ?.weekDevelopment !=
+                                              null ??
+                                          false) {
+                                        String imageUrl = AppConstants
+                                            .weekDevelopmentIcon
+                                            .replaceFirst(
+                                                '{icon_name}',
+                                                response
+                                                        ?.data
+                                                        ?.additionalInfo
+                                                        ?.weekDevelopment
+                                                        ?.sizeImage ??
+                                                    '');
+                                        return SvgPicture.network(
+                                          imageUrl,
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover,
+                                          placeholderBuilder:
+                                              (BuildContext context) =>
+                                                  Image.asset(
+                                            'assets/images/Avacado.png',
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        );
+                                      }
+                                      return SizedBox.shrink();
+                                    },
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -446,6 +476,7 @@ class _HomeTabViewState extends State<HomeTabView> {
                                   ),
                                   Text(
                                     model.sizeText,
+                                    textAlign: TextAlign.center,
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: appBodyTextBlackColor,
@@ -535,10 +566,37 @@ class _HomeTabViewState extends State<HomeTabView> {
                           },
                         ),
                       ),
-                      Image.asset(
-                        'assets/images/Avacado.png',
-                        width: 100,
-                        height: 100,
+                      Observer(
+                        builder: (context) {
+                          if (model?.getPregnancyDetailResult?.additionalInfo
+                                      ?.weekDevelopment !=
+                                  null ??
+                              false) {
+                            String imageUrl = AppConstants.weekDevelopmentIcon
+                                .replaceFirst(
+                                    '{icon_name}',
+                                    model
+                                            ?.getPregnancyDetailResult
+                                            ?.additionalInfo
+                                            ?.weekDevelopment
+                                            ?.sizeImage ??
+                                        '');
+                            return SvgPicture.network(
+                              imageUrl,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.contain,
+                              placeholderBuilder: (BuildContext context) =>
+                                  Image.asset(
+                                'assets/images/Avacado.png',
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                              ),
+                            );
+                          }
+                          return SizedBox.shrink();
+                        },
                       ),
                       SizedBox(
                         height: 30,

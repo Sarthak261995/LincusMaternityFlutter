@@ -57,6 +57,23 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
     });
   }
 
+  final _$getPregnancyDetailResultAtom =
+      Atom(name: 'HomeTabStoreBase.getPregnancyDetailResult');
+
+  @override
+  PregnancyDetails get getPregnancyDetailResult {
+    _$getPregnancyDetailResultAtom.reportRead();
+    return super.getPregnancyDetailResult;
+  }
+
+  @override
+  set getPregnancyDetailResult(PregnancyDetails value) {
+    _$getPregnancyDetailResultAtom
+        .reportWrite(value, super.getPregnancyDetailResult, () {
+      super.getPregnancyDetailResult = value;
+    });
+  }
+
   final _$getPregnancyDetailResponseFutureAtom =
       Atom(name: 'HomeTabStoreBase.getPregnancyDetailResponseFuture');
 
@@ -273,6 +290,7 @@ mixin _$HomeTabStore on HomeTabStoreBase, Store {
 showError: ${showError},
 isBusy: ${isBusy},
 getWellbeingScoreFuture: ${getWellbeingScoreFuture},
+getPregnancyDetailResult: ${getPregnancyDetailResult},
 getPregnancyDetailResponseFuture: ${getPregnancyDetailResponseFuture},
 wellbeingScore: ${wellbeingScore},
 wellbeingProgress: ${wellbeingProgress},
