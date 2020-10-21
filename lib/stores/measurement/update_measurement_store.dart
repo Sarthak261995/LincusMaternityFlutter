@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/models/measurement/measurement_model.dart';
+import 'package:lincus_maternity/models/measurement/request/update_measurement_comment_request.dart';
 import 'package:lincus_maternity/models/measurement/request/update_measurement_request.dart';
 import 'package:lincus_maternity/models/measurement/update_measurement_model.dart';
 import 'package:lincus_maternity/services/https_service.dart';
@@ -77,11 +78,34 @@ abstract class UpdateMeasurementStoreBase with Store {
     return Future<bool>.value(result);
   }
 
+  @action
+  Future<bool> tryUpdateComment() async {
+    bool result = false;
+    try {
+      var request = getUpdateCommentMeasurementRequest();
+      var updateResponse = await apiService.updateMeasurementComment(
+          measurementModel.index.toString(), request);
+      if (updateResponse != null &&
+          (updateResponse.status == 200 || updateResponse.status == 201)) {
+        result = true;
+      }
+    } on FetchDataException {
+      errorText = 'No Internet connection';
+      showError = true;
+    } catch (e) {
+      errorText = 'Something went wrong. Please try again';
+      showError = true;
+    } finally {}
+    return Future<bool>.value(result);
+  }
+
   List<ReactionDisposer> _disposers;
 
   void dispose() {
-    for (final d in _disposers) {
-      d();
+    if (_disposers != null) {
+      for (final d in _disposers) {
+        d();
+      }
     }
   }
 
@@ -127,6 +151,13 @@ abstract class UpdateMeasurementStoreBase with Store {
     return request;
   }
 
+  UpdateMeasurementCommentRequest getUpdateCommentMeasurementRequest() {
+    var request = new UpdateMeasurementCommentRequest();
+    request.comments = note;
+    return request;
+  }
+
+  @action
   bool validateValueUpdate() {
     bool result = true;
     String errorText;
@@ -139,6 +170,22 @@ abstract class UpdateMeasurementStoreBase with Store {
         result = false;
         errorText = 'Enter valid value';
       }
+    }
+    if (errorText != null) {
+      alertMessage = errorText;
+      alertTitle = 'Error';
+      showAlert = true;
+    }
+    return result;
+  }
+
+  @action
+  bool validateCommentUpdate() {
+    bool result = true;
+    String errorText;
+    if (note == null || note.isEmpty) {
+      result = false;
+      errorText = 'note cannot be empty';
     }
     if (errorText != null) {
       alertMessage = errorText;

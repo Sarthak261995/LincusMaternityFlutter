@@ -96,8 +96,10 @@ abstract class MeasurementTabStoreBase with Store {
   }
 
   void dispose() {
-    for (final d in _disposers) {
-      d();
+    if (_disposers != null) {
+      for (final d in _disposers) {
+        d();
+      }
     }
   }
 

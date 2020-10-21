@@ -32,6 +32,7 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
   void initState() {
     super.initState();
     model.clear_data();
+    addReactions();
   }
 
   final List<ReactionDisposer> _disposers = [];
@@ -59,12 +60,15 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
       (_) => model.showAlert,
       (_) {
         if (model.showAlert == true) {
-          showAlert(model.alertTitle, model.alertMessage);
+          showAlert(model.alertTitle, model.alertMessage,
+              _scaffoldKey.currentContext);
           model.resetAlertData();
         }
       },
     ));
   }
+
+  void addReactions() {}
 
   Widget buildGredientButton(String text, Function tap, double width,
       List<Color> gredientColor, Color textColor) {
@@ -314,8 +318,14 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                                     await LoaderService.instance
                                                         .HideLoader();
                                                     if (result) {
-                                                      showAlert('Sucess',
-                                                          'Measurement updated sucessfully');
+                                                      showAlert(
+                                                          'Sucess',
+                                                          'Measurement updated sucessfully',
+                                                          _scaffoldKey
+                                                              .currentContext);
+                                                      AppLocator
+                                                          .measurement_tab_store
+                                                          .initialiseGetLatestMeasurements();
                                                     }
                                                   }
                                                 },
@@ -482,7 +492,29 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                             Container(
                                               height: 40.0,
                                               child: RaisedButton(
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  if (model
+                                                      .validateValueUpdate()) {
+                                                    await LoaderService.instance
+                                                        .ShowLoader(
+                                                            message:
+                                                                "Updating");
+                                                    bool result = await model
+                                                        .tryUpdateValue();
+                                                    await LoaderService.instance
+                                                        .HideLoader();
+                                                    if (result) {
+                                                      showAlert(
+                                                          'Sucess',
+                                                          'Measurement updated sucessfully',
+                                                          _scaffoldKey
+                                                              .currentContext);
+                                                      AppLocator
+                                                          .measurement_tab_store
+                                                          .initialiseGetLatestMeasurements();
+                                                    }
+                                                  }
+                                                },
                                                 elevation: 5,
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
@@ -575,10 +607,23 @@ class _UpdateMeasurementPageState extends BasePageState<UpdateMeasurementPage> {
                                     ),
                                   ),
                                   Center(
-                                    child: buildGredientButton('Update',
-                                        () async {
-                                      showAlert('Hello', 'Hi');
-                                      print('object');
+                                    child: buildGredientButton('Add', () async {
+                                      if (model.validateCommentUpdate()) {
+                                        await LoaderService.instance
+                                            .ShowLoader(message: "Updating");
+                                        bool result =
+                                            await model.tryUpdateComment();
+                                        await LoaderService.instance
+                                            .HideLoader();
+                                        if (result) {
+                                          showAlert(
+                                              'Sucess',
+                                              'Measurement updated sucessfully',
+                                              _scaffoldKey.currentContext);
+                                          //AppLocator.measurement_tab_store
+                                          //.initialiseGetLatestMeasurements();
+                                        }
+                                      }
                                     },
                                         200.0,
                                         [appGreenColor, appLightGreenColor],

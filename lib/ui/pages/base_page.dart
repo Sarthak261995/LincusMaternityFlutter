@@ -16,6 +16,11 @@ class BasePageState<T extends BasePage> extends State<T> {
     return Container();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   showSnackBar({String text, GlobalKey<ScaffoldState> scaffoldKey}) {
     final snackBar = SnackBar(
       content: Text(text, style: Theme.of(context).textTheme.bodyText1),
@@ -24,7 +29,7 @@ class BasePageState<T extends BasePage> extends State<T> {
     scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  Future<void> showAlert(String title, String message,
+  Future<void> showAlert(String title, String message, BuildContext context,
       {String acknowledgeText = 'Ok'}) async {
     return await showDialog<void>(
       context: context,

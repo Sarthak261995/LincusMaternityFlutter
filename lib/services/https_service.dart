@@ -6,6 +6,7 @@ import 'package:lincus_maternity/models/authentication/request/access_token_requ
 import 'package:lincus_maternity/models/authentication/request/refresh_token_request.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/models/general_response_model.dart';
+import 'package:lincus_maternity/models/measurement/request/update_measurement_comment_request.dart';
 import 'package:lincus_maternity/models/measurement/request/update_measurement_request.dart';
 import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
@@ -19,7 +20,7 @@ import 'package:lincus_maternity/stores/locator.dart';
 import 'package:validators/validators.dart';
 
 class ApiService {
-  var http;
+  Client http;
 
   ApiService() {
     http = new Client();
@@ -81,6 +82,18 @@ class ApiService {
     return Future<GeneralResponseModel>.value(response);
   }
 
+  Future<GeneralResponseModel> updateMeasurementComment(String id,
+      UpdateMeasurementCommentRequest updateMeasurementRequest) async {
+    String url = '${AppUrls.update_measurement_url}/$id';
+    var response = new GeneralResponseModel();
+    if (updateMeasurementRequest != null) {
+      final api_response = await protectedPut(
+          url: url, postData: updateMeasurementRequest.toJson());
+      response = GeneralResponseModel.fromJson(api_response);
+    }
+    return Future<GeneralResponseModel>.value(response);
+  }
+
   _decodeResponse(Response response) => json.decode(response.body);
 
   Future<dynamic> anonymousGet(String url) async {
@@ -127,6 +140,21 @@ class ApiService {
     try {
       await checkAndUpdateAccessToken();
       final response = await http.post(url,
+          headers: getProtectedHeader(), body: jsonEncode(postData));
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> protectedPut(
+      {String url, Map<String, dynamic> postData}) async {
+    print("request:($postData)");
+    var responseJson;
+    try {
+      await checkAndUpdateAccessToken();
+      final response = await http.put(url,
           headers: getProtectedHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
     } on SocketException {

@@ -137,6 +137,14 @@ mixin _$UpdateMeasurementStore on UpdateMeasurementStoreBase, Store {
     return _$tryUpdateValueAsyncAction.run(() => super.tryUpdateValue());
   }
 
+  final _$tryUpdateCommentAsyncAction =
+      AsyncAction('UpdateMeasurementStoreBase.tryUpdateComment');
+
+  @override
+  Future<bool> tryUpdateComment() {
+    return _$tryUpdateCommentAsyncAction.run(() => super.tryUpdateComment());
+  }
+
   final _$UpdateMeasurementStoreBaseActionController =
       ActionController(name: 'UpdateMeasurementStoreBase');
 
@@ -168,6 +176,28 @@ mixin _$UpdateMeasurementStore on UpdateMeasurementStoreBase, Store {
         .startAction(name: 'UpdateMeasurementStoreBase.resetAlertData');
     try {
       return super.resetAlertData();
+    } finally {
+      _$UpdateMeasurementStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool validateValueUpdate() {
+    final _$actionInfo = _$UpdateMeasurementStoreBaseActionController
+        .startAction(name: 'UpdateMeasurementStoreBase.validateValueUpdate');
+    try {
+      return super.validateValueUpdate();
+    } finally {
+      _$UpdateMeasurementStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool validateCommentUpdate() {
+    final _$actionInfo = _$UpdateMeasurementStoreBaseActionController
+        .startAction(name: 'UpdateMeasurementStoreBase.validateCommentUpdate');
+    try {
+      return super.validateCommentUpdate();
     } finally {
       _$UpdateMeasurementStoreBaseActionController.endAction(_$actionInfo);
     }
