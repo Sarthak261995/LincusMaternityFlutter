@@ -9,6 +9,7 @@ import 'package:lincus_maternity/models/general_response_model.dart';
 import 'package:lincus_maternity/models/measurement/request/update_measurement_comment_request.dart';
 import 'package:lincus_maternity/models/measurement/request/update_measurement_request.dart';
 import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
+import 'package:lincus_maternity/models/measurement/response/get_measurement_option_response.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/urls.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
@@ -54,6 +55,13 @@ class ApiService {
     final apiResponse = await protectedGet(AppUrls.get_wellbeing_score_url);
     response = GetWellbeingScoreResponse.fromJson(apiResponse);
     return Future<GetWellbeingScoreResponse>.value(response);
+  }
+
+  Future<GetMeasurementOptionResponse> getMeasurementOption() async {
+    var response = new GetMeasurementOptionResponse();
+    final apiResponse = await protectedGet(AppUrls.get_measurement_option_url);
+    response = GetMeasurementOptionResponse.fromJson(apiResponse);
+    return Future<GetMeasurementOptionResponse>.value(response);
   }
 
   Future<GetPregnancyDetailResponse> getPregnancyDetails() async {

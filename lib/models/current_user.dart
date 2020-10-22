@@ -5,6 +5,8 @@ import 'package:lincus_maternity/models/pregnancy/pregnancy_details.dart';
 import 'package:lincus_maternity/models/wellbeing/wellbeing_score.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 
+import 'measurement/measurement_option_model.dart';
+
 class CurrentUser {
   String username;
   String password;
@@ -14,6 +16,7 @@ class CurrentUser {
   WellBeingScore wellBeingScore;
   PregnancyDetails pregnancyDetails;
   List<MeasurementModel> latestMeasurements;
+  List<MeasurementOptionModel> measurementOptions;
   CurrentUser(this.preferencesService);
 
   Future<void> LoadUserData() async {
