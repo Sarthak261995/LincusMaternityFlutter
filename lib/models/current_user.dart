@@ -2,6 +2,7 @@ import 'package:lincus_maternity/models/User/basic_info.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/measurement/measurement_model.dart';
 import 'package:lincus_maternity/models/pregnancy/pregnancy_details.dart';
+import 'package:lincus_maternity/models/survey/survey_model.dart';
 import 'package:lincus_maternity/models/wellbeing/wellbeing_score.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 
@@ -17,6 +18,7 @@ class CurrentUser {
   PregnancyDetails pregnancyDetails;
   List<MeasurementModel> latestMeasurements;
   List<MeasurementOptionModel> measurementOptions;
+  List<SurveyModel> availableSurvey;
   CurrentUser(this.preferencesService);
 
   Future<void> LoadUserData() async {

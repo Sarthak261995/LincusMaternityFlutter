@@ -6,6 +6,7 @@ import 'package:lincus_maternity/ui/pages/base_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:lincus_maternity/ui/widgets/hometabs/home_tab_view.dart';
 import 'package:lincus_maternity/ui/widgets/measurementtabs/measurement_tab_view.dart';
+import 'package:lincus_maternity/ui/widgets/surveytabs/survey_tab_view.dart';
 import 'package:mobx/mobx.dart';
 
 class HomePage extends BasePage {
@@ -72,6 +73,10 @@ class _HomePageState extends BasePageState<HomePage> {
                 if (!AppLocator.measurement_tab_store.isInitialised) {
                   AppLocator.measurement_tab_store
                       .initialiseGetLatestMeasurements();
+                }
+              } else if (index == 2) {
+                if (!AppLocator.survey_tab_store.isInitialised) {
+                  AppLocator.survey_tab_store.initialiseGetAvailableSurvey();
                 }
               }
             }
@@ -227,9 +232,7 @@ class _HomePageState extends BasePageState<HomePage> {
                   openCloseDrawer: openCloseDrawer,
                 ),
                 MeasurementTabView(openCloseDrawer: openCloseDrawer),
-                Container(
-                  color: Colors.pink,
-                ),
+                SurveyTabView(openCloseDrawer: openCloseDrawer),
                 Container(
                   color: Colors.yellow,
                 )

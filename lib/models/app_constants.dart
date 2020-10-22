@@ -10,4 +10,7 @@ class AppConstants {
 
   static String weekDevelopmentIcon =
       "https://dev-images.onemedicaltechnologies.co.uk/lincus-app/basic/maternity/week_developments/{icon_name}.svg";
+
+  static String surveyIcon =
+      "https://dev-images.onemedicaltechnologies.co.uk/lincus-app/basic/wellbeing/{icon_name}.svg";
 }

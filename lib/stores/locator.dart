@@ -4,6 +4,7 @@ import 'package:lincus_maternity/services/preferences_service.dart';
 import 'package:lincus_maternity/services/service_locator.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
+import 'package:lincus_maternity/stores/home/survey_tab_store.dart';
 import 'package:lincus_maternity/stores/measurement/update_measurement_store.dart';
 
 import 'home/measurement_tab_store.dart';
@@ -22,6 +23,8 @@ class AppLocator {
       serviceLocator<UpdateMeasurementStore>();
   static AddMeasurementStore get add_measurement_store =>
       serviceLocator<AddMeasurementStore>();
+  static SurveyTabStore get survey_tab_store =>
+      serviceLocator<SurveyTabStore>();
   static PreferencesService get preferences_service =>
       serviceLocator<PreferencesService>();
   static CurrentUser get current_user => serviceLocator<CurrentUser>();
