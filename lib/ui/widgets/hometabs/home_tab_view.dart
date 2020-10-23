@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gradient_progress/gradient_progress.dart';
+import 'package:lincus_maternity/controls/gradient-progress.dart';
 import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
