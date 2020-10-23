@@ -6,6 +6,7 @@ import 'package:lincus_maternity/models/survey/response/get_available_survey_res
 import 'package:lincus_maternity/models/survey/survey_model.dart';
 import 'package:lincus_maternity/stores/home/survey_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:lincus_maternity/ui/pages/survey/take_survey_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 
@@ -34,7 +35,16 @@ class _SurveyTabViewState extends State<SurveyTabView> {
       color: Colors.white.withOpacity(0.0),
       child: InkWell(
         splashColor: Colors.grey,
-        onTap: () {},
+        onTap: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TakeSurveyPage(
+                      title: 'AddMeasurementPage',
+                      surveyModel: itm,
+                    )),
+          );
+        },
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -89,23 +99,23 @@ class _SurveyTabViewState extends State<SurveyTabView> {
       child: Stack(
         children: <Widget>[
           Positioned(
-            left: -13,
-            top: -13,
+            left: -10,
+            top: -10,
             child: SvgPicture.asset(
               'assets/images/blob02.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appPaleColor,
               fit: BoxFit.contain,
             ),
           ),
           Positioned(
-            top: -13,
+            top: -10,
             right: -10,
             child: SvgPicture.asset(
               'assets/images/blob03.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appGreenColor,
               fit: BoxFit.contain,
             ),

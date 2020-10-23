@@ -12,6 +12,7 @@ import 'package:lincus_maternity/models/measurement/response/get_latest_measurem
 import 'package:lincus_maternity/models/measurement/response/get_measurement_option_response.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
 import 'package:lincus_maternity/models/survey/response/get_available_survey_response.dart';
+import 'package:lincus_maternity/models/survey/response/get_survey_detail_response.dart';
 import 'package:lincus_maternity/models/urls.dart';
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/services/jwt_decoder.dart';
@@ -108,6 +109,16 @@ class ApiService {
       response = GeneralResponseModel.fromJson(api_response);
     }
     return Future<GeneralResponseModel>.value(response);
+  }
+
+  Future<GetSurveyDetailResponse> getSurveyDetail(String id) async {
+    String url = '${AppUrls.get_survey_detail}/$id';
+    var response = new GetSurveyDetailResponse();
+    if (id != null) {
+      final api_response = await protectedGet(url);
+      response = GetSurveyDetailResponse.fromJson(api_response);
+    }
+    return Future<GetSurveyDetailResponse>.value(response);
   }
 
   _decodeResponse(Response response) => json.decode(response.body);

@@ -9,4 +9,5 @@ class AppUrls {
   static const update_measurement_url = base_url + "measurements";
   static const get_measurement_option_url = base_url + "measurements/options";
   static const get_available_survey_url = base_url + "wellbeing/available";
+  static const get_survey_detail = base_url + "wellbeing/survey";
 }

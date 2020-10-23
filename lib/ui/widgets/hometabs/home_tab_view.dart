@@ -738,29 +738,29 @@ class _HomeTabViewState extends State<HomeTabView> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: appBlueColor,
+      color: appPurpleColor,
       child: Stack(
         children: <Widget>[
           Positioned(
-            left: -13,
-            top: -13,
+            left: -10,
+            top: -10,
             child: SvgPicture.asset(
               'assets/images/blob02.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appPaleColor,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            top: -13,
+            top: -10,
             right: -10,
             child: SvgPicture.asset(
               'assets/images/blob03.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appGreenColor,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
           ),
           Padding(

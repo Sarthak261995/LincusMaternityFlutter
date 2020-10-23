@@ -8,6 +8,7 @@ import 'package:lincus_maternity/stores/home/survey_tab_store.dart';
 import 'package:lincus_maternity/stores/measurement/add_measurement_store.dart';
 import 'package:lincus_maternity/stores/measurement/update_measurement_store.dart';
 import 'package:lincus_maternity/stores/settings_store.dart';
+import 'package:lincus_maternity/stores/survey/take_survey_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'https_service.dart';
@@ -46,5 +47,7 @@ void setupServiceLocator(SharedPreferences sharedPreferences) {
   serviceLocator.registerLazySingleton<AddMeasurementStore>(() =>
       AddMeasurementStore(
           serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
+  serviceLocator.registerLazySingleton<TakeSurveyStore>(() => TakeSurveyStore(
+      serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
   //serviceLocator.registerFactory<ChooseFavoritesViewModel>(() => ChooseFavoritesViewModel());
 }

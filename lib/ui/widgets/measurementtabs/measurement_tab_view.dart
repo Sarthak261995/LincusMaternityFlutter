@@ -222,23 +222,23 @@ class _MeasurementTabViewState extends State<MeasurementTabView> {
       child: Stack(
         children: <Widget>[
           Positioned(
-            left: -13,
-            top: -13,
+            left: -10,
+            top: -10,
             child: SvgPicture.asset(
               'assets/images/blob02.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appPaleColor,
               fit: BoxFit.contain,
             ),
           ),
           Positioned(
-            top: -13,
+            top: -10,
             right: -10,
             child: SvgPicture.asset(
               'assets/images/blob03.svg',
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 130,
               color: appGreenColor,
               fit: BoxFit.contain,
             ),
