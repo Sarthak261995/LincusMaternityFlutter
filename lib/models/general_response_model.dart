@@ -1,7 +1,7 @@
 class GeneralResponseModel {
   int status;
   String message;
-  String data;
+  dynamic data;
 
   GeneralResponseModel({this.status, this.message, this.data});
 

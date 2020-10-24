@@ -78,79 +78,82 @@ class _TakeSurveyPageState extends BasePageState<TakeSurveyPage> {
     SurveyQuestions itm = model.surveyQuestionList.elementAt(index);
     String imageUrl =
         AppConstants.measurementIcon.replaceFirst('{icon_name}', itm.icon);
-    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      SizedBox(height: 10),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            child: Text(
-              '${itm.question}',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: fontSize22),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            iconSize: 25,
-            icon: Icon(
-              Icons.info_sharp,
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-      FlutterSlider(
-        values: [itm.start?.toDouble() ?? 0],
-        max: itm.sliderMax?.toDouble() ?? 10,
-        tooltip: FlutterSliderTooltip(
-            textStyle: TextStyle(fontSize: 17, color: Colors.black),
-            boxStyle: FlutterSliderTooltipBox(
-                decoration:
-                    BoxDecoration(color: Colors.redAccent.withOpacity(0.7)))),
-        handlerAnimation: FlutterSliderHandlerAnimation(
-            curve: Curves.bounceOut,
-            reverseCurve: Curves.bounceIn,
-            duration: Duration(milliseconds: 400),
-            scale: 1.2),
-        min: 0,
-        handlerHeight: 40,
-        handlerWidth: 40,
-        trackBar: FlutterSliderTrackBar(
-            inactiveTrackBar: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-            activeTrackBar: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-            inactiveTrackBarHeight: 10,
-            activeTrackBarHeight: 10),
-        handler: FlutterSliderHandler(
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.yellow,
-            ),
-            child: Text('${itm.start}',
+    return StatefulBuilder(builder: (cntxt, innerSetState) {
+      return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                '${itm.question}',
                 style: TextStyle(
-                    color: appBodyTextBlackColor, fontSize: fontSizeLarge)),
-          ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: fontSize22),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              iconSize: 25,
+              icon: Icon(
+                Icons.info_sharp,
+                color: Colors.white,
+              ),
+            )
+          ],
         ),
-        onDragging: (handlerIndex, lowerValue, upperValue) {
-          double newValue = lowerValue;
-          if (newValue != null) {
-            itm.start = newValue.toInt();
-          }
-          setState(() {});
-        },
-      )
-    ]);
+        FlutterSlider(
+          values: [itm.start?.toDouble() ?? 0],
+          max: itm.sliderMax?.toDouble() ?? 10,
+          tooltip: FlutterSliderTooltip(
+              textStyle: TextStyle(fontSize: 17, color: Colors.black),
+              boxStyle: FlutterSliderTooltipBox(
+                  decoration:
+                      BoxDecoration(color: Colors.redAccent.withOpacity(0.7)))),
+          handlerAnimation: FlutterSliderHandlerAnimation(
+              curve: Curves.bounceOut,
+              reverseCurve: Curves.bounceIn,
+              duration: Duration(milliseconds: 400),
+              scale: 1.2),
+          min: 0,
+          handlerHeight: 40,
+          handlerWidth: 40,
+          trackBar: FlutterSliderTrackBar(
+              inactiveTrackBar: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              activeTrackBar: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              inactiveTrackBarHeight: 10,
+              activeTrackBarHeight: 10),
+          handler: FlutterSliderHandler(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.yellow,
+              ),
+              child: Text('${itm.start}',
+                  style: TextStyle(
+                      color: appBodyTextBlackColor, fontSize: fontSizeLarge)),
+            ),
+          ),
+          onDragging: (handlerIndex, lowerValue, upperValue) {
+            double newValue = lowerValue;
+            if (newValue != null) {
+              innerSetState(() {
+                itm.start = newValue.toInt();
+              });
+            }
+          },
+        )
+      ]);
+    });
   }
 
   Widget buildGredientButton(String text, Function tap, double width,
@@ -488,18 +491,18 @@ class _TakeSurveyPageState extends BasePageState<TakeSurveyPage> {
                             ),
                             Center(
                               child: buildGredientButton('Save', () async {
-                                if (model.validateValueUpdate()) {
+                                if (model.validateSaveSurvey()) {
                                   await LoaderService.instance
                                       .ShowLoader(message: "Updating");
-                                  bool result = await model.tryUpdateValue();
+                                  bool result = await model.trySaveSurvey();
                                   await LoaderService.instance.HideLoader();
                                   if (result) {
                                     showAlert(
                                         'Sucess',
-                                        'Measurement updated sucessfully',
+                                        'survey saved sucessfully',
                                         _scaffoldKey.currentContext);
-                                    AppLocator.measurement_tab_store
-                                        .initialiseGetLatestMeasurements();
+                                    //AppLocator.measurement_tab_store
+                                    //.initialiseGetLatestMeasurements();
                                   }
                                 }
                               },

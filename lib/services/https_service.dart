@@ -11,6 +11,7 @@ import 'package:lincus_maternity/models/measurement/request/update_measurement_r
 import 'package:lincus_maternity/models/measurement/response/get_latest_measurement_response.dart';
 import 'package:lincus_maternity/models/measurement/response/get_measurement_option_response.dart';
 import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_response.dart';
+import 'package:lincus_maternity/models/survey/request/save_survey_request.dart';
 import 'package:lincus_maternity/models/survey/response/get_available_survey_response.dart';
 import 'package:lincus_maternity/models/survey/response/get_survey_detail_response.dart';
 import 'package:lincus_maternity/models/urls.dart';
@@ -94,6 +95,17 @@ class ApiService {
       final api_response = await protectedPost(
           url: AppUrls.update_measurement_url,
           postData: updateMeasurementRequest.toJson());
+      response = GeneralResponseModel.fromJson(api_response);
+    }
+    return Future<GeneralResponseModel>.value(response);
+  }
+
+  Future<GeneralResponseModel> saveSurvey(
+      SaveSurveyRequest saveSurveyRequest) async {
+    var response = new GeneralResponseModel();
+    if (saveSurveyRequest != null) {
+      final api_response = await protectedPost(
+          url: AppUrls.save_survey_url, postData: saveSurveyRequest.toJson());
       response = GeneralResponseModel.fromJson(api_response);
     }
     return Future<GeneralResponseModel>.value(response);

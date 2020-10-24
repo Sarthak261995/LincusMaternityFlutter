@@ -125,12 +125,12 @@ mixin _$TakeSurveyStore on TakeSurveyStoreBase, Store {
     return _$getSurveyDetailAsyncAction.run(() => super.getSurveyDetail());
   }
 
-  final _$tryUpdateValueAsyncAction =
-      AsyncAction('TakeSurveyStoreBase.tryUpdateValue');
+  final _$trySaveSurveyAsyncAction =
+      AsyncAction('TakeSurveyStoreBase.trySaveSurvey');
 
   @override
-  Future<bool> tryUpdateValue() {
-    return _$tryUpdateValueAsyncAction.run(() => super.tryUpdateValue());
+  Future<bool> trySaveSurvey() {
+    return _$trySaveSurveyAsyncAction.run(() => super.trySaveSurvey());
   }
 
   final _$TakeSurveyStoreBaseActionController =
@@ -181,11 +181,11 @@ mixin _$TakeSurveyStore on TakeSurveyStoreBase, Store {
   }
 
   @override
-  bool validateValueUpdate() {
+  bool validateSaveSurvey() {
     final _$actionInfo = _$TakeSurveyStoreBaseActionController.startAction(
-        name: 'TakeSurveyStoreBase.validateValueUpdate');
+        name: 'TakeSurveyStoreBase.validateSaveSurvey');
     try {
-      return super.validateValueUpdate();
+      return super.validateSaveSurvey();
     } finally {
       _$TakeSurveyStoreBaseActionController.endAction(_$actionInfo);
     }

@@ -1,7 +1,9 @@
 import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
-import 'package:lincus_maternity/models/measurement/request/update_measurement_request.dart';
+import 'package:lincus_maternity/models/helper.dart';
+import 'package:lincus_maternity/models/survey/request/save_survey_request.dart';
 import 'package:lincus_maternity/models/survey/response/get_survey_detail_response.dart';
+import 'package:lincus_maternity/models/survey/survey_answers.dart';
 import 'package:lincus_maternity/models/survey/survey_model.dart';
 import 'package:lincus_maternity/models/survey/survey_question.dart';
 import 'package:lincus_maternity/services/https_service.dart';
@@ -9,6 +11,7 @@ import 'package:lincus_maternity/services/preferences_service.dart';
 import 'package:lincus_maternity/stores/locator.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:core';
+import 'package:intl/intl.dart';
 part 'take_survey_store.g.dart';
 
 class TakeSurveyStore = TakeSurveyStoreBase with _$TakeSurveyStore;
@@ -83,11 +86,11 @@ abstract class TakeSurveyStoreBase with Store {
   }
 
   @action
-  Future<bool> tryUpdateValue() async {
+  Future<bool> trySaveSurvey() async {
     bool result = false;
     try {
-      var request = getUpdateValueMeasurementRequest();
-      var updateResponse = await apiService.updateMeasurement(request);
+      var request = getSaveSurveyRequest();
+      var updateResponse = await apiService.saveSurvey(request);
       if (updateResponse != null &&
           (updateResponse.status == 200 || updateResponse.status == 201)) {
         result = true;
@@ -135,41 +138,41 @@ abstract class TakeSurveyStoreBase with Store {
     getSurveyDetailFuture = ObservableFuture(getSurveyDetail());
   }
 
-  UpdateMeasurementRequest getUpdateValueMeasurementRequest() {
-    var request = new UpdateMeasurementRequest();
-    /*
+  SaveSurveyRequest getSaveSurveyRequest() {
+    var request = new SaveSurveyRequest(
+        score: 0,
+        actionTitle: '',
+        actionNote: '',
+        actionStatus: 'in_progress',
+        actionPriority: 1);
+    request.survey = surveyModel.id;
     request.latitude = 0.0;
     request.longitude = 0.0;
     request.comment = note;
-    request.photofilename = '';
     request.datetime =
         '${Helper.toIso8601String(DateTime.now().toLocal())}+00:00';
+    //request.appTimestamp =
+    //'${Helper.toIso8601String(DateTime.now().toLocal())}+00:00';
     request.appTimestamp =
-        '${Helper.toIso8601String(DateTime.now().toLocal())}+00:00';
-    var measurementList = new List<UpdateMeasurementModel>();
-    measurementOptionList.forEach((element) {
-      if (element.value != null && element.value.isNotEmpty) {
-        measurementList.add(UpdateMeasurementModel(
-            type: element.id, value: double.parse(element.value)));
+        new DateFormat('yyyy-MM-dd HH:mm:ss').format(new DateTime.now());
+    request.actionDue = new DateFormat('yyyy-MM-dd').format(new DateTime.now());
+    var answers = new List<SurveyAnswers>();
+    surveyQuestionList.forEach((element) {
+      if (element.id != null && element.start != null) {
+        answers.add(SurveyAnswers(question: element.id, answer: element.start));
       }
     });
-    request.measurements = measurementList; */
+    request.answers = answers;
     return request;
   }
 
   @action
-  bool validateValueUpdate() {
+  bool validateSaveSurvey() {
     bool result = true;
     String errorText;
-    int valueCount = 0;
-    /*measurementOptionList.forEach((element) {
-      if (element.value != null && element.value.isNotEmpty) {
-        valueCount++;
-      }
-    }); */
-    if (valueCount == 0) {
+    if (surveyQuestionList.length == 0) {
       result = false;
-      errorText = 'Enter atleast one measurement';
+      errorText = 'No question found.';
     }
     if (errorText != null) {
       alertMessage = errorText;
