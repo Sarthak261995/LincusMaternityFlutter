@@ -47,6 +47,7 @@ class _SurveyTabViewState extends State<SurveyTabView> {
         },
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(height: 10),
               Container(
@@ -75,7 +76,7 @@ class _SurveyTabViewState extends State<SurveyTabView> {
               SizedBox(
                 height: 20,
               ),
-              Expanded(
+              Flexible(
                 child: Text(
                   '${itm.name}',
                   textAlign: TextAlign.center,
@@ -301,16 +302,27 @@ class _SurveyTabViewState extends State<SurveyTabView> {
                                       ),
                                     );
                                   } else {
+                                    var _crossAxisSpacing = 8;
+                                    var _screenWidth =
+                                        MediaQuery.of(context).size.width;
+                                    var _crossAxisCount = 2;
+                                    var _width = (_screenWidth -
+                                            ((_crossAxisCount - 1) *
+                                                _crossAxisSpacing)) /
+                                        _crossAxisCount;
+                                    var cellHeight = 280;
+                                    var _aspectRatio = _width / cellHeight;
                                     return Expanded(
                                       child: GridView.builder(
                                         itemCount: getSurveysItemCount(),
-                                        scrollDirection: Axis.horizontal,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 10.0,
-                                          mainAxisSpacing: 10.0,
-                                        ),
+                                                crossAxisCount: 2,
+                                                crossAxisSpacing: 10.0,
+                                                mainAxisSpacing: 10.0,
+                                                childAspectRatio: _aspectRatio),
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           return buildSurveyItem(

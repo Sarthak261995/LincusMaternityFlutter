@@ -15,6 +15,9 @@ Future<void> main() async {
       statusBarBrightness: Brightness.dark,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   setupServiceLocator(sharedPreferences);
   Widget _defaultHome = new LoginPage(
     title: 'LoginPage',
