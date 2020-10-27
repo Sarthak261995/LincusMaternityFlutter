@@ -7,6 +7,7 @@ import 'package:lincus_maternity/models/pregnancy/response/get_pregnancy_detail_
 import 'package:lincus_maternity/models/wellbeing/response/get_wellbeing_score_response.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/locator.dart';
+import 'package:lincus_maternity/ui/pages/birthplan/create_birthplan_page.dart';
 import 'package:lincus_maternity/ui/themes/styles.dart';
 import 'package:mobx/mobx.dart';
 
@@ -65,9 +66,13 @@ class _HomeTabViewState extends State<HomeTabView> {
         height: 40.0,
         child: RaisedButton(
           onPressed: () {
-            setState(() {
-              _wellBeingVisible = true;
-            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateBirthPlanPage(
+                        title: 'CreateBirthPlanPage',
+                      )),
+            );
           },
           elevation: 5,
           shape:

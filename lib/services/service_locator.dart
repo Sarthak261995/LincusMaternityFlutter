@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:lincus_maternity/models/current_user.dart';
 import 'package:lincus_maternity/services/preferences_service.dart';
 import 'package:lincus_maternity/stores/authentication/login_store.dart';
+import 'package:lincus_maternity/stores/birthplan/create_birthplan_store.dart';
 import 'package:lincus_maternity/stores/home/home_tab_store.dart';
 import 'package:lincus_maternity/stores/home/measurement_tab_store.dart';
 import 'package:lincus_maternity/stores/home/survey_tab_store.dart';
@@ -9,6 +10,7 @@ import 'package:lincus_maternity/stores/measurement/add_measurement_store.dart';
 import 'package:lincus_maternity/stores/measurement/update_measurement_store.dart';
 import 'package:lincus_maternity/stores/settings_store.dart';
 import 'package:lincus_maternity/stores/survey/take_survey_store.dart';
+import 'package:lincus_maternity/ui/pages/birthplan/create_birthplan_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'https_service.dart';
@@ -49,5 +51,8 @@ void setupServiceLocator(SharedPreferences sharedPreferences) {
           serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
   serviceLocator.registerLazySingleton<TakeSurveyStore>(() => TakeSurveyStore(
       serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
+  serviceLocator.registerLazySingleton<CreateBirthplanStore>(() =>
+      CreateBirthplanStore(
+          serviceLocator<PreferencesService>(), serviceLocator<ApiService>()));
   //serviceLocator.registerFactory<ChooseFavoritesViewModel>(() => ChooseFavoritesViewModel());
 }

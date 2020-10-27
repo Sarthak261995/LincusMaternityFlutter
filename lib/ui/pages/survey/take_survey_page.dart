@@ -95,7 +95,9 @@ class _TakeSurveyPageState extends BasePageState<TakeSurveyPage> {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                await showQuestionInfoDialog(cntxt, itm);
+              },
               iconSize: 25,
               icon: Icon(
                 Icons.info_sharp,
@@ -189,6 +191,264 @@ class _TakeSurveyPageState extends BasePageState<TakeSurveyPage> {
         ),
       ),
     );
+  }
+
+  Future<void> showSuccessDialog(BuildContext context) async {
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.2),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(scale: a1.value, child: widget);
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+            content: Container(
+              padding: EdgeInsets.zero,
+              height: 450,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16.0)),
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                      top: 5,
+                      right: 5,
+                      child: IconButton(
+                        icon: Icon(Icons.close_outlined),
+                        iconSize: 35,
+                        color: appBlueColor,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )),
+                  Positioned(
+                      top: -10,
+                      left: -10,
+                      child: SvgPicture.asset(
+                        'assets/images/blob02.svg',
+                        color: appPurpleColor,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      )),
+                  Positioned(
+                      right: -10,
+                      bottom: -10,
+                      child: SvgPicture.asset(
+                        'assets/images/leaves.svg',
+                        color: appGreenColor,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text('Thank you',
+                            style: TextStyle(
+                              color: appBodyTextBlackColor,
+                              fontSize: fontSizeHeading,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('For submitting you data it has now been stored',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: appBodyTextBlackColor,
+                              fontSize: fontSize22,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                            'Its okay if you are feeling low and anxious,we have a number of tips to help you through this time',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: appBodyTextBlackColor,
+                              fontSize: fontSize22,
+                              fontWeight: FontWeight.w400,
+                            )),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        buildGredientButton('Tips', () async {
+                          Navigator.of(context).pop();
+                        },
+                            150,
+                            [
+                              appGreenColor.withOpacity(0.7),
+                              appLightGreenColor
+                            ],
+                            Colors.black)
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<void> showQuestionInfoDialog(
+      BuildContext context, SurveyQuestions itm) async {
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.2),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(scale: a1.value, child: widget);
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.zero,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                          top: 5,
+                          right: 5,
+                          child: IconButton(
+                            icon: Icon(Icons.close_outlined),
+                            iconSize: 35,
+                            color: appBlueColor,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )),
+                      Positioned(
+                          top: -10,
+                          left: -10,
+                          child: SvgPicture.asset(
+                            'assets/images/blob02.svg',
+                            color: appPurpleColor,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          )),
+                      Positioned(
+                          right: -10,
+                          bottom: -10,
+                          child: SvgPicture.asset(
+                            'assets/images/leaves.svg',
+                            color: appGreenColor,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 30, left: 10.0, right: 10.0, bottom: 30.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(itm.question,
+                                style: TextStyle(
+                                  color: appBodyTextBlackColor,
+                                  fontSize: fontSize24,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ListTile(
+                              leading: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      color: appPinkColor,
+                                      shape: BoxShape.circle)),
+                              title: Text(
+                                  'Distressing or unbearable abdominal pain/discomfort which is insense,strong or deep and can limit daily activities.',
+                                  textAlign: TextAlign.start,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    color: appBodyTextBlackColor,
+                                    fontSize: fontSize22,
+                                    fontWeight: FontWeight.w400,
+                                  )),
+                              onTap: () {},
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ListTile(
+                              leading: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      color: appPaleColor,
+                                      shape: BoxShape.circle)),
+                              title: Text(
+                                  'Mild abdominal pain/discomfort which does not impact daily activities.',
+                                  softWrap: true,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: appBodyTextBlackColor,
+                                    fontSize: fontSize22,
+                                    fontWeight: FontWeight.w400,
+                                  )),
+                              onTap: () {},
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ListTile(
+                              leading: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      color: appGreenColor,
+                                      shape: BoxShape.circle)),
+                              title: Text(
+                                  'Slight twinges or no abdominal pain at all',
+                                  softWrap: true,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: appBodyTextBlackColor,
+                                    fontSize: fontSize22,
+                                    fontWeight: FontWeight.w400,
+                                  )),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -497,12 +757,9 @@ class _TakeSurveyPageState extends BasePageState<TakeSurveyPage> {
                                   bool result = await model.trySaveSurvey();
                                   await LoaderService.instance.HideLoader();
                                   if (result) {
-                                    showAlert(
-                                        'Sucess',
-                                        'survey saved sucessfully',
-                                        _scaffoldKey.currentContext);
-                                    //AppLocator.measurement_tab_store
-                                    //.initialiseGetLatestMeasurements();
+                                    showSuccessDialog(context);
+                                    AppLocator.home_tab_store
+                                        .initialiseWellbeingScore();
                                   }
                                 }
                               },

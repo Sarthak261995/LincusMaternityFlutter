@@ -4,6 +4,8 @@ import 'package:lincus_maternity/models/app_constants.dart';
 import 'package:lincus_maternity/models/authentication/access_token.dart';
 import 'package:lincus_maternity/models/authentication/request/access_token_request.dart';
 import 'package:lincus_maternity/models/authentication/request/refresh_token_request.dart';
+import 'package:lincus_maternity/models/birthplan/request/save_birthplan_question_model.dart';
+import 'package:lincus_maternity/models/birthplan/response/get_birthplan_question_response.dart';
 import 'package:lincus_maternity/models/exceptions/custom_exception.dart';
 import 'package:lincus_maternity/models/general_response_model.dart';
 import 'package:lincus_maternity/models/measurement/request/update_measurement_comment_request.dart';
@@ -133,6 +135,24 @@ class ApiService {
     return Future<GetSurveyDetailResponse>.value(response);
   }
 
+  Future<GetBirthplanQuestionResponse> getBirthplanQuestion() async {
+    var response = new GetBirthplanQuestionResponse();
+    final apiResponse = await protectedGet(AppUrls.get_birthplan_question);
+    response = GetBirthplanQuestionResponse.fromJson(apiResponse);
+    return Future<GetBirthplanQuestionResponse>.value(response);
+  }
+
+  Future<GeneralResponseModel> submitBirthplan(
+      List<SaveBirthplanQuestionModel> request) async {
+    String url = '${AppUrls.submit_birthplan_question}';
+    var response = new GeneralResponseModel();
+    if (request != null) {
+      final api_response = await protectedPostObj(url: url, postData: request);
+      response = GeneralResponseModel.fromJson(api_response);
+    }
+    return Future<GeneralResponseModel>.value(response);
+  }
+
   _decodeResponse(Response response) => json.decode(response.body);
 
   Future<dynamic> anonymousGet(String url) async {
@@ -172,6 +192,19 @@ class ApiService {
     return responseJson;
   }
 
+  Future<dynamic> anonymousPostObj({String url, Object postData}) async {
+    var responseJson;
+    print("request:($postData)");
+    try {
+      final response = await http.post(url,
+          headers: getDefaultHeader(), body: jsonEncode(postData));
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
   Future<dynamic> protectedPost(
       {String url, Map<String, dynamic> postData}) async {
     print("request:($postData)");
@@ -181,6 +214,21 @@ class ApiService {
       final response = await http.post(url,
           headers: getProtectedHeader(), body: jsonEncode(postData));
       responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> protectedPostObj({String url, Object postData}) async {
+    print("request:($postData)");
+    var responseJson;
+    var data = jsonEncode(postData);
+    try {
+      await checkAndUpdateAccessToken();
+      final response = await http.post(url,
+          headers: getProtectedHeader(), body: jsonEncode(postData));
+      responseJson = _response500(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -217,6 +265,29 @@ class ApiService {
         throw UnauthorisedException(response.body.toString());
       case 500:
         throw InvalidInputException('Invalid request');
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
+  }
+
+  dynamic _response500(Response response) {
+    switch (response.statusCode) {
+      case 200:
+      case 201:
+        var responseJson = json.decode(response.body.toString());
+        print(responseJson);
+        return responseJson;
+      case 400:
+        throw BadRequestException(response.body.toString());
+      case 401:
+        throw InvalidInputException('Invalid request');
+      case 403:
+        throw UnauthorisedException(response.body.toString());
+      case 500:
+        var responseJson = json.decode(response.body.toString());
+        print(responseJson);
+        return responseJson;
       default:
         throw FetchDataException(
             'Error occured while Communication with Server with StatusCode : ${response.statusCode}');

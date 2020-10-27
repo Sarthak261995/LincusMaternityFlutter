@@ -11,4 +11,7 @@ class AppUrls {
   static const get_available_survey_url = base_url + "wellbeing/available";
   static const get_survey_detail = base_url + "wellbeing/survey";
   static const save_survey_url = base_url + "wellbeing";
+  static const get_birthplan_question =
+      base_url + "maternity/birthplan/questions";
+  static const submit_birthplan_question = base_url + "maternity/birthplan";
 }
